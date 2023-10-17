@@ -31,7 +31,7 @@ public class User {
         }
         this.email = email;
         this.login = login;
-        if(name != null) {
+        if (name != null) {
             this.name = name;
         } else {
             this.name = login;
