@@ -16,7 +16,7 @@ import java.time.LocalDate;
 @Data
 public class Film {
     private static int idSequence = 0;
-    public static final LocalDate MINDATE = LocalDate.of(1895, 12 , 28);
+    public static final LocalDate MINDATE = LocalDate.of(1895, 12, 28);
     private static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
     private int id;
     @NotBlank(message = "Название не может быть пустым")
@@ -32,7 +32,6 @@ public class Film {
     private Duration duration;
 
     public Film(Integer id, @NonNull String name, String description, @NonNull LocalDate releaseDate, long longDuration) throws ValidationException {
-
         if(id != null) {
             this.id = id;
         } else {

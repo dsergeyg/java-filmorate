@@ -24,7 +24,6 @@ public class User {
     private LocalDate birthday;
 
     public User(Integer id, @NonNull String email, @NonNull String login, String name, LocalDate birthday) {
-
         if (id != null) {
             this.id = id;
         } else {
