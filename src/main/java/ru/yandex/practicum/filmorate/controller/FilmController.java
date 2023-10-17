@@ -16,10 +16,11 @@ import java.util.Map;
 @Slf4j
 public class FilmController {
     private final Map<Integer, Film> films = new HashMap<>();
+
     @PostMapping("/api/v1/films/film")
-    public Film addFilm (@Valid @RequestBody Film film, BindingResult result) {
+    public Film addFilm(@Valid @RequestBody Film film, BindingResult result) {
         if (result.hasErrors()) {
-            for(FieldError fieldError : result.getFieldErrors())
+            for (FieldError fieldError : result.getFieldErrors())
                 log.error(fieldError.getDefaultMessage());
         }
         log.info("Получен запрос на создание" + film);
@@ -29,9 +30,9 @@ public class FilmController {
     }
 
     @PutMapping("/api/v1/films/film")
-    public Film updateFilm (@Valid @RequestBody Film film, BindingResult result) {
+    public Film updateFilm(@Valid @RequestBody Film film, BindingResult result) {
         if (result.hasErrors()) {
-            for(FieldError fieldError : result.getFieldErrors())
+            for (FieldError fieldError : result.getFieldErrors())
                 log.error(fieldError.getDefaultMessage());
         }
         int id = film.getId();
@@ -43,6 +44,7 @@ public class FilmController {
             return null;
         }
     }
+
     @GetMapping("/api/v1/films")
     public List<Film> listFilms() {
         return new ArrayList<>(films.values());
