@@ -12,10 +12,11 @@ import java.util.*;
 @Slf4j
 public class UserController {
     private final Map<Integer, User> users = new HashMap<>();
+
     @PostMapping("/api/v1/users/user")
-    public User createUser (@Valid @RequestBody User user, BindingResult result) {
+    public User createUser(@Valid @RequestBody User user, BindingResult result) {
         if (result.hasErrors()) {
-            for(FieldError fieldError : result.getFieldErrors())
+            for (FieldError fieldError : result.getFieldErrors())
                 log.error(fieldError.getDefaultMessage());
         }
         log.info("Получен запрос на создание" + user);
@@ -24,9 +25,9 @@ public class UserController {
     }
 
     @PutMapping("/api/v1/users/user")
-    public User updateUser (@Valid @RequestBody User user, BindingResult result) {
+    public User updateUser(@Valid @RequestBody User user, BindingResult result) {
         if (result.hasErrors()) {
-            for(FieldError fieldError : result.getFieldErrors())
+            for (FieldError fieldError : result.getFieldErrors())
                 log.error(fieldError.getDefaultMessage());
         }
         int id = user.getId();
@@ -38,6 +39,7 @@ public class UserController {
             return user;
         }
     }
+
     @GetMapping("/api/v1/users")
     public List<User> listUsers() {
         return new ArrayList<>(users.values());
