@@ -13,6 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class FilmTest {
     private static final ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
     private static final Validator validator = factory.getValidator();
+
     @Test
     void validName() {
         assertDoesNotThrow(() -> new Film(null, "SomeFilm", "Description of new film", LocalDate.of(2020, 10, 1), 90));
@@ -35,9 +36,9 @@ public class FilmTest {
 
     @Test
     void validReleaseDate() {
-        assertDoesNotThrow(()-> new Film(null, "SomeFilm", "Description of new film", LocalDate.of(2020, 10, 1), 90));
+        assertDoesNotThrow(() -> new Film(null, "SomeFilm", "Description of new film", LocalDate.of(2020, 10, 1), 90));
         assertThrows(NullPointerException.class, () -> new Film(null, "SomeFilm", "Description of new film", null, 90));
-        assertDoesNotThrow(()-> new Film(null, "SomeFilm", "Description of new film", Film.MINDATE, 90));
+        assertDoesNotThrow(() -> new Film(null, "SomeFilm", "Description of new film", Film.MINDATE, 90));
         assertThrows(ValidationException.class,() -> new Film(null, "SomeFilm", "Description of new film", Film.MINDATE.minusDays(1), 90));
     }
 
