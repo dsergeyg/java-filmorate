@@ -24,18 +24,16 @@ public class User {
     private LocalDate birthday;
 
     public User(Integer id, @NonNull String email, @NonNull String login, String name, LocalDate birthday) {
-        if (id != null) {
+        if (id != null)
             this.id = id;
-        } else {
+        else
             this.id = idSequence++;
-        }
         this.email = email;
         this.login = login;
-        if (name != null) {
+        if (name != null)
             this.name = name;
-        } else {
+        else
             this.name = login;
-        }
         this.birthday = birthday;
     }
 }

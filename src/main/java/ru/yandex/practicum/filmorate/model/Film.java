@@ -32,18 +32,16 @@ public class Film {
     private Duration duration;
 
     public Film(Integer id, @NonNull String name, String description, @NonNull LocalDate releaseDate, long longDuration) throws ValidationException {
-        if(id != null) {
+        if (id != null)
             this.id = id;
-        } else {
+        else
             this.id = idSequence++;
-        }
         this.name = name;
         this.description = description;
-        if (releaseDate.isAfter(MINDATE.minusDays(1))) {
+        if (releaseDate.isAfter(MINDATE.minusDays(1)))
             this.releaseDate = releaseDate;
-        } else {
+        else
             throw new ValidationException("дата релиза — не раньше " + simpleDateFormat.format(Date.valueOf(MINDATE)));
-        }
         this.longDuration = longDuration;
         this.duration = Duration.ofMinutes(longDuration);
     }
