@@ -2,12 +2,15 @@ package ru.yandex.practicum.filmorate.model;
 
 import lombok.Data;
 import lombok.NonNull;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Past;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.Objects;
+import java.util.regex.Pattern;
 
 @Data
 public class User {
@@ -23,20 +26,24 @@ public class User {
     @Past(message = "Дата рождения не может быть в будущем")
     private LocalDate birthday;
 
-    public User(Integer id, @NonNull String email, @NonNull String login, String name, LocalDate birthday) {
 
-        if (id != null) {
-            this.id = id;
-        } else {
-            this.id = idSequence++;
-        }
-        this.email = email;
-        this.login = login;
-        if(name != null) {
-            this.name = name;
-        } else {
+    public User(Integer id, @NonNull String email, @NonNull String login, String name, LocalDate birthday) throws ValidationException {
+        String regexPattern = "^(.+)@(\\S+)$";
+        if (Pattern.compile(regexPattern).matcher(email).matches())
+            this.email = email;
+        else throw new ValidationException("Email должен иметь структуру my@yandex.ru");
+        if (!login.contains(" "))
+            this.login = login;
+        else
+            throw new ValidationException("Login не должен содержать пробелы");
+        if (name != null)
+            this.name = Objects.requireNonNullElse(name.isBlank() ? null : name, login);
+        else
             this.name = login;
-        }
-        this.birthday = birthday;
+        if (birthday.isBefore(LocalDate.now()))
+            this.birthday = birthday;
+        else
+            throw new ValidationException("Дата рождения не может быть в будущем");
+        this.id = Objects.requireNonNullElseGet(id, () -> ++idSequence);
     }
 }
