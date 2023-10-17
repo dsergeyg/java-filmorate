@@ -13,12 +13,12 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class UserTest {
-    private final static ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-    private final static Validator validator = factory.getValidator();
+    private static final ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+    private static final Validator validator = factory.getValidator();
     @Test
     void validEmail() {
-        assertDoesNotThrow(()-> new User(null , "my@yandex.ru", "SomeLogin", "SomeName", LocalDate.of(2000, 12, 31)));
-        assertThrows(NullPointerException.class, ()-> new User(null , null, "SomeLogin", "SomeName", LocalDate.of(2000, 12, 31)));
+        assertDoesNotThrow(() -> new User(null , "my@yandex.ru", "SomeLogin", "SomeName", LocalDate.of(2000, 12, 31)));
+        assertThrows(NullPointerException.class, () -> new User(null , null, "SomeLogin", "SomeName", LocalDate.of(2000, 12, 31)));
         Optional<ConstraintViolation<User>> violation = validator.validate(new User(null , "myyandex.ru", "SomeLogin", "SomeName", LocalDate.of(2000, 12, 31))).stream().findFirst();
         assertFalse(violation.isEmpty());
         assertEquals("Email должен иметь структуру my@yandex.ru", violation.get().getMessage());
@@ -26,8 +26,8 @@ public class UserTest {
 
     @Test
     void validLogin() {
-        assertDoesNotThrow(()-> new User(null , "my@yandex.ru", "SomeLogin", "SomeName", LocalDate.of(2000, 12, 31)));
-        assertThrows(NullPointerException.class, ()-> new User(null , "my@yandex.ru", null, "SomeName", LocalDate.of(2000, 12, 31)));
+        assertDoesNotThrow(() -> new User(null , "my@yandex.ru", "SomeLogin", "SomeName", LocalDate.of(2000, 12, 31)));
+        assertThrows(NullPointerException.class, () -> new User(null , "my@yandex.ru", null, "SomeName", LocalDate.of(2000, 12, 31)));
         Optional<ConstraintViolation<User>> violation = validator.validate(new User(null , "my@yandex.ru", "", "SomeName", LocalDate.of(2000, 12, 31))).stream().findFirst();
         assertFalse(violation.isEmpty());
         assertEquals("Login должен содержать символы", violation.get().getMessage());
