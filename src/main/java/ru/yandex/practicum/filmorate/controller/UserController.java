@@ -13,7 +13,7 @@ import java.util.*;
 public class UserController {
     private final Map<Integer, User> users = new HashMap<>();
 
-    @PostMapping("/api/v1/users/user")
+    @PostMapping("/users")
     public User createUser(@Valid @RequestBody User user, BindingResult result) {
         if (result.hasErrors()) {
             for (FieldError fieldError : result.getFieldErrors())
@@ -24,7 +24,7 @@ public class UserController {
         return users.get(user.getId());
     }
 
-    @PutMapping("/api/v1/users/user")
+    @PutMapping("/users")
     public User updateUser(@Valid @RequestBody User user, BindingResult result) {
         if (result.hasErrors()) {
             for (FieldError fieldError : result.getFieldErrors())
@@ -40,7 +40,7 @@ public class UserController {
         }
     }
 
-    @GetMapping("/api/v1/users")
+    @GetMapping("/users")
     public List<User> listUsers() {
         return new ArrayList<>(users.values());
     }

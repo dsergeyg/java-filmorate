@@ -17,7 +17,7 @@ import java.util.Map;
 public class FilmController {
     private final Map<Integer, Film> films = new HashMap<>();
 
-    @PostMapping("/api/v1/films/film")
+    @PostMapping("/films")
     public Film addFilm(@Valid @RequestBody Film film, BindingResult result) {
         if (result.hasErrors()) {
             for (FieldError fieldError : result.getFieldErrors())
@@ -29,7 +29,7 @@ public class FilmController {
         return films.get(id);
     }
 
-    @PutMapping("/api/v1/films/film")
+    @PutMapping("/films")
     public Film updateFilm(@Valid @RequestBody Film film, BindingResult result) {
         if (result.hasErrors()) {
             for (FieldError fieldError : result.getFieldErrors())
@@ -45,7 +45,7 @@ public class FilmController {
         }
     }
 
-    @GetMapping("/api/v1/films")
+    @GetMapping("/films")
     public List<Film> listFilms() {
         return new ArrayList<>(films.values());
     }
