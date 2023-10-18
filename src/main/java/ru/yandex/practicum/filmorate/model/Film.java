@@ -27,19 +27,16 @@ public class Film {
 
     private LocalDate releaseDate;
 
-    @Positive(message = "Продолжительность фильма должна быть положительной")
-    private long longDuration;
-    private Duration duration;
+    private Duration curDuration;
 
-    public Film(Integer id, @NonNull String name, String description, @NonNull LocalDate releaseDate, long duration) throws ValidationException {
+    public Film(Integer id, @NonNull String name, String description, @NonNull LocalDate releaseDate, @Positive(message = "Продолжительность фильма должна быть положительной") long duration) throws ValidationException {
         this.name = name;
         this.description = description;
         if (releaseDate.isAfter(MINDATE.minusDays(1)))
             this.releaseDate = releaseDate;
         else
             throw new ValidationException("дата релиза — не раньше " + simpleDateFormat.format(Date.valueOf(MINDATE)));
-        this.longDuration = duration;
-        this.duration = Duration.ofMinutes(this.longDuration);
+        this.curDuration = Duration.ofMinutes(duration);
         this.id = Objects.requireNonNullElseGet(id, () -> ++idSequence);
     }
 }
