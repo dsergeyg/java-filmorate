@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import javax.validation.Valid;
 import java.util.*;
@@ -19,7 +20,7 @@ public class UserController {
             for (FieldError fieldError : result.getFieldErrors())
                 log.error(fieldError.getDefaultMessage());
         }
-        log.info("Получен запрос на создание" + user);
+        log.info("Получен запрос на создание " + user);
         users.put(user.getId(), user);
         return users.get(user.getId());
     }
@@ -35,8 +36,8 @@ public class UserController {
             users.put(id, user);
             return users.get(id);
         } else {
-            log.info(user + "Not found!");
-            return user;
+            log.info(user + " Not found!");
+            throw new ValidationException(user + " Not found!");
         }
     }
 

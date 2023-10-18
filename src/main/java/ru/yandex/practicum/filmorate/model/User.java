@@ -2,12 +2,13 @@ package ru.yandex.practicum.filmorate.model;
 
 import lombok.Data;
 import lombok.NonNull;
-
+import ru.yandex.practicum.filmorate.exception.ValidationException;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Past;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.Objects;
 
 @Data
 public class User {
@@ -23,17 +24,14 @@ public class User {
     @Past(message = "Дата рождения не может быть в будущем")
     private LocalDate birthday;
 
-    public User(Integer id, @NonNull String email, @NonNull String login, String name, LocalDate birthday) {
-        if (id != null)
-            this.id = id;
-        else
-            this.id = idSequence++;
+    public User(Integer id, @NonNull String email, @NonNull String login, String name, LocalDate birthday) throws ValidationException {
+        this.id = Objects.requireNonNullElseGet(id, () -> idSequence++);
         this.email = email;
-        this.login = login;
-        if (name != null)
-            this.name = name;
+        if (!login.contains(" "))
+            this.login = login;
         else
-            this.name = login;
+            throw new ValidationException("Login не должен содержать пробелы");
+        this.name = Objects.requireNonNullElse(name.isBlank() ? null : name, login);
         this.birthday = birthday;
     }
 }
