@@ -44,14 +44,9 @@ public class UserTest {
 
     @Test
     void validBirthDay() {
-        Optional<ConstraintViolation<User>> violation = validator.validate(new User(null, "my@yandex.ru", "SomeLogin", "SomeName", LocalDate.now().plusDays(1))).stream().findFirst();
-        assertFalse(violation.isEmpty());
-        assertEquals("Дата рождения не может быть в будущем", violation.get().getMessage());
-        violation = validator.validate(new User(null, "my@yandex.ru", "SomeLogin", "SomeName", LocalDate.now())).stream().findFirst();
-        assertFalse(violation.isEmpty());
-        assertEquals("Дата рождения не может быть в будущем", violation.get().getMessage());
-        violation = validator.validate(new User(null, "my@yandex.ru", "SomeLogin", "SomeName", LocalDate.now().minusDays(1))).stream().findFirst();
-        assertTrue(violation.isEmpty());
+        assertThrows(ValidationException.class, () -> new User(null, "my@yandex.ru", "SomeLogin", "SomeName", LocalDate.now().plusDays(1)));
+        assertThrows(ValidationException.class, () -> new User(null, "my@yandex.ru", "SomeLogin", "SomeName", LocalDate.now()));
+        assertDoesNotThrow(() -> new User(null, "my@yandex.ru", "SomeLogin", "SomeName", LocalDate.now().minusDays(1)));
     }
 
     @AfterAll

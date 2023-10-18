@@ -40,7 +40,10 @@ public class User {
             this.name = Objects.requireNonNullElse(name.isBlank() ? null : name, login);
         else
             this.name = login;
-        this.birthday = birthday;
+        if (birthday.isBefore(LocalDate.now()))
+            this.birthday = birthday;
+        else
+            throw new ValidationException("Дата рождения не может быть в будущем");
         this.id = Objects.requireNonNullElseGet(id, () -> ++idSequence);
     }
 }
