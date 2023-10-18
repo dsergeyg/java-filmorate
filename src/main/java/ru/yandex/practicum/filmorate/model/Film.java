@@ -31,15 +31,15 @@ public class Film {
     private long longDuration;
     private Duration duration;
 
-    public Film(Integer id, @NonNull String name, String description, @NonNull LocalDate releaseDate, long longDuration) throws ValidationException {
-        this.id = Objects.requireNonNullElseGet(id, () -> ++idSequence);
+    public Film(Integer id, @NonNull String name, String description, @NonNull LocalDate releaseDate, long duration) throws ValidationException {
         this.name = name;
         this.description = description;
         if (releaseDate.isAfter(MINDATE.minusDays(1)))
             this.releaseDate = releaseDate;
         else
             throw new ValidationException("дата релиза — не раньше " + simpleDateFormat.format(Date.valueOf(MINDATE)));
-        this.longDuration = longDuration;
-        this.duration = Duration.ofMinutes(longDuration);
+        this.longDuration = duration;
+        this.duration = Duration.ofMinutes(this.longDuration);
+        this.id = Objects.requireNonNullElseGet(id, () -> ++idSequence);
     }
 }
