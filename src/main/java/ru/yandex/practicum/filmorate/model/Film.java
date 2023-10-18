@@ -29,7 +29,8 @@ public class Film {
 
     private LocalDate releaseDate;
 
-    private Duration duration;
+    private long duration;
+    private Duration curDuration;
 
     public Film(Integer id, @NonNull String name, String description, @NonNull LocalDate releaseDate, long duration)
             throws ValidationException {
@@ -40,9 +41,10 @@ public class Film {
         else
             throw new ValidationException("дата релиза — не раньше " + simpleDateFormat.format(Date.valueOf(MINDATE)));
         if (duration > 0)
-            this.duration = Duration.ofMinutes(duration);
+            this.duration = duration;
         else
             throw new ValidationException("Продолжительность фильма должна быть положительной");
+        this.curDuration = Duration.ofMinutes(duration);
         this.id = Objects.requireNonNullElseGet(id, () -> ++idSequence);
     }
 }

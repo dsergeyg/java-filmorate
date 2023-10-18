@@ -5,6 +5,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import javax.validation.Valid;
@@ -43,7 +44,7 @@ public class FilmController {
             return films.get(id);
         } else {
             log.info(film + " Not found!");
-            return null;
+            throw new ValidationException(film + " Not found!");
         }
     }
 
