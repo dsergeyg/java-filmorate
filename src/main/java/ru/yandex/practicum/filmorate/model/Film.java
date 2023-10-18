@@ -45,6 +45,6 @@ public class Film {
         else
             throw new ValidationException("Продолжительность фильма должна быть положительной");
         this.curDuration = Duration.ofMinutes(duration);
-        this.id = Objects.requireNonNullElseGet(id, () -> ++idSequence);
+        this.id = Objects.requireNonNullElseGet(id, () -> idSequence++);
     }
 }
