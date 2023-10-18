@@ -25,7 +25,7 @@ public class User {
     private LocalDate birthday;
 
     public User(Integer id, @NonNull String email, @NonNull String login, String name, LocalDate birthday) throws ValidationException {
-        this.id = Objects.requireNonNullElseGet(id, () -> idSequence++);
+        this.id = Objects.requireNonNullElseGet(id, () -> ++idSequence);
         this.email = email;
         if (!login.contains(" "))
             this.login = login;

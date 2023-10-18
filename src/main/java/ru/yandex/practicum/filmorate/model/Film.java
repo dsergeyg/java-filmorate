@@ -10,7 +10,7 @@ import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.LocalDate;
-
+import java.util.Objects;
 
 
 @Data
@@ -32,10 +32,7 @@ public class Film {
     private Duration duration;
 
     public Film(Integer id, @NonNull String name, String description, @NonNull LocalDate releaseDate, long longDuration) throws ValidationException {
-        if (id != null)
-            this.id = id;
-        else
-            this.id = idSequence++;
+        this.id = Objects.requireNonNullElseGet(id, () -> ++idSequence);
         this.name = name;
         this.description = description;
         if (releaseDate.isAfter(MINDATE.minusDays(1)))
