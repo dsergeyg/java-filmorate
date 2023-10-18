@@ -2,7 +2,9 @@ package ru.yandex.practicum.filmorate.model;
 
 import lombok.Data;
 import lombok.NonNull;
+import org.springframework.validation.annotation.Validated;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
@@ -13,6 +15,7 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 
+@Validated
 @Data
 public class Film {
     private static int idSequence = 0;
@@ -27,16 +30,20 @@ public class Film {
 
     private LocalDate releaseDate;
 
-    private Duration curDuration;
+    private Duration duration;
 
-    public Film(Integer id, @NonNull String name, String description, @NonNull LocalDate releaseDate, @Positive(message = "Продолжительность фильма должна быть положительной") long duration) throws ValidationException {
+    public Film(Integer id, @NonNull String name, String description, @NonNull LocalDate releaseDate, long duration)
+            throws ValidationException {
         this.name = name;
         this.description = description;
         if (releaseDate.isAfter(MINDATE.minusDays(1)))
             this.releaseDate = releaseDate;
         else
             throw new ValidationException("дата релиза — не раньше " + simpleDateFormat.format(Date.valueOf(MINDATE)));
-        this.curDuration = Duration.ofMinutes(duration);
+        if (duration > 0)
+            this.duration = Duration.ofMinutes(duration);
+        else
+            throw new ValidationException("Продолжительность фильма должна быть положительной");
         this.id = Objects.requireNonNullElseGet(id, () -> ++idSequence);
     }
 }

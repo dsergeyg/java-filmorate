@@ -44,14 +44,18 @@ public class FilmTest {
 
     @Test
     void validDuration() {
-        Optional<ConstraintViolation<Film>> violation = validator.validate(new Film(null, "SomeFilm", "SomeDescription", LocalDate.of(2020, 10, 1), -1)).stream().findFirst();
-        assertFalse(violation.isEmpty());
-        assertEquals("Продолжительность фильма должна быть положительной", violation.get().getMessage());
-        violation = validator.validate(new Film(null, "SomeFilm", "SomeDescription", LocalDate.of(2020, 10, 1), 0)).stream().findFirst();
-        assertFalse(violation.isEmpty());
-        assertEquals("Продолжительность фильма должна быть положительной", violation.get().getMessage());
-        violation = validator.validate(new Film(null, "SomeFilm", "SomeDescription", LocalDate.of(2020, 10, 1), 1)).stream().findFirst();
-        assertTrue(violation.isEmpty());
+        assertThrows(ValidationException.class, () -> new Film(null, "SomeFilm", "SomeDescription", LocalDate.of(2020, 10, 1), -100));
+        try {
+            new Film(null, "SomeFilm", "SomeDescription", LocalDate.of(2020, 10, 1), -1);
+        } catch (ValidationException e) {
+            assertEquals("Продолжительность фильма должна быть положительной", e.getMessage());
+        }
+        try {
+            new Film(null, "SomeFilm", "SomeDescription", LocalDate.of(2020, 10, 1), 0);
+        } catch (ValidationException e) {
+            assertEquals("Продолжительность фильма должна быть положительной", e.getMessage());
+        }
+        assertDoesNotThrow(() -> new Film(null, "SomeFilm", "SomeDescription", LocalDate.of(2020, 10, 1), 1));
     }
 
     @AfterAll
