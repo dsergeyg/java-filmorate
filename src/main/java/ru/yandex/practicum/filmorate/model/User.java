@@ -31,7 +31,10 @@ public class User {
             this.login = login;
         else
             throw new ValidationException("Login не должен содержать пробелы");
-        this.name = Objects.requireNonNullElse(name.isBlank() ? null : name, login);
+        if (name != null)
+            this.name = Objects.requireNonNullElse(name.isBlank() ? null : name, login);
+        else
+            this.name = login;
         this.birthday = birthday;
     }
 }

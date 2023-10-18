@@ -40,9 +40,7 @@ public class UserTest {
         assertEquals(name, new User(null, "my@yandex.ru", "SomeLogin", name, LocalDate.of(2000, 12, 31)).getName());
         String login = "SomeLogin";
         assertEquals(login, new User(null, "my@yandex.ru", "SomeLogin", null, LocalDate.of(2000, 12, 31)).getName());
-        Optional<ConstraintViolation<User>> violation = validator.validate(new User(null, "my@yandex.ru", "SomeLogin", "", LocalDate.of(2000, 12, 31))).stream().findFirst();
-        assertFalse(violation.isEmpty());
-        assertEquals("Имя должно содержать символы", violation.get().getMessage());
+        assertEquals(login, new User(null, "my@yandex.ru", "SomeLogin", "", LocalDate.of(2000, 12, 31)).getName());
     }
 
     @Test
