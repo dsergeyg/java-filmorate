@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.model;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -20,9 +21,7 @@ public class UserTest {
     void validEmail() {
         assertDoesNotThrow(() -> new User(null, "my@yandex.ru", "SomeLogin", "SomeName", LocalDate.of(2000, 12, 31)));
         assertThrows(NullPointerException.class, () -> new User(null, null, "SomeLogin", "SomeName", LocalDate.of(2000, 12, 31)));
-        Optional<ConstraintViolation<User>> violation = validator.validate(new User(null, "myyandex.ru", "SomeLogin", "SomeName", LocalDate.of(2000, 12, 31))).stream().findFirst();
-        assertFalse(violation.isEmpty());
-        assertEquals("Email должен иметь структуру my@yandex.ru", violation.get().getMessage());
+        assertThrows(ValidationException.class, () -> new User(null, "myyandex.ru", "SomeLogin", "SomeName", LocalDate.of(2000, 12, 31)));
     }
 
     @Test
