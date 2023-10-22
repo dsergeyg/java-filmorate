@@ -1,49 +1,23 @@
 package ru.yandex.practicum.filmorate.model;
 
+import lombok.Builder;
 import lombok.Data;
-import lombok.NonNull;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
 
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.Objects;
-import java.util.regex.Pattern;
 
 @Data
+@Builder(setterPrefix = "set")
 public class User {
-    private static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
-    private static int idSequence = 0;
-    private final int id;
-    @Email(message = "Email должен иметь структуру my@yandex.ru")
+    private int id;
+    @Email(message = "Email doesn't match email pattern, example \"my@yandex.ru\"")
+    @NotNull(message = "Email may not be empty")
     private String email;
-    @NotBlank(message = "Login должен содержать символы")
+    @NotNull (message = "Login may not be empty")
     private final String login;
-    @NotBlank(message = "Имя должно содержать символы")
     private String name;
-    @Past(message = "Дата рождения не может быть в будущем")
+    @Past(message = "Birthday mast be in the past")
     private LocalDate birthday;
-
-
-    public User(Integer id, @NonNull String email, @NonNull String login, String name, LocalDate birthday) throws ValidationException {
-        String regexPattern = "^(.+)@(\\S+)$";
-        if (Pattern.compile(regexPattern).matcher(email).matches())
-            this.email = email;
-        else throw new ValidationException("Email должен иметь структуру my@yandex.ru");
-        if (!login.contains(" "))
-            this.login = login;
-        else
-            throw new ValidationException("Login не должен содержать пробелы");
-        if (name != null)
-            this.name = Objects.requireNonNullElse(name.isBlank() ? null : name, login);
-        else
-            this.name = login;
-        if (birthday.isBefore(LocalDate.now()))
-            this.birthday = birthday;
-        else
-            throw new ValidationException("Дата рождения не может быть в будущем");
-        this.id = Objects.requireNonNullElseGet(id, () -> ++idSequence);
-    }
 }

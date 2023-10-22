@@ -1,50 +1,25 @@
 package ru.yandex.practicum.filmorate.model;
 
+import lombok.Builder;
 import lombok.Data;
-import lombok.NonNull;
-import org.springframework.validation.annotation.Validated;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
-import java.sql.Date;
-import java.text.SimpleDateFormat;
-import java.time.Duration;
 import java.time.LocalDate;
-import java.util.Objects;
 
-
-@Validated
+@Builder(setterPrefix = "set")
 @Data
 public class Film {
-    private static int idSequence = 0;
-    public static final LocalDate MINDATE = LocalDate.of(1895, 12, 28);
-    private static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
     private int id;
-    @NotBlank(message = "Название не может быть пустым")
+    @Size(min = 1, message = "Name may not be empty")
+    @NotBlank(message = "Name may not be null")
     private String name;
-
-    @Size(max = 200, message = "Максимальная длина описания — 200 символов")
+    @Size(max = 200, message = "Description max string value 200 chars")
     private String description;
-
+    @NotNull(message = "ReleaseDate may not be empty")
     private LocalDate releaseDate;
-
+    @Positive(message = "Duration may not be negative")
     private long duration;
-    private Duration curDuration;
-
-    public Film(Integer id, @NonNull String name, String description, @NonNull LocalDate releaseDate, long duration)
-            throws ValidationException {
-        this.name = name;
-        this.description = description;
-        if (releaseDate.isAfter(MINDATE.minusDays(1)))
-            this.releaseDate = releaseDate;
-        else
-            throw new ValidationException("дата релиза — не раньше " + simpleDateFormat.format(Date.valueOf(MINDATE)));
-        if (duration > 0)
-            this.duration = duration;
-        else
-            throw new ValidationException("Продолжительность фильма должна быть положительной");
-        this.curDuration = Duration.ofMinutes(duration);
-        this.id = Objects.requireNonNullElseGet(id, () -> ++idSequence);
-    }
 }
