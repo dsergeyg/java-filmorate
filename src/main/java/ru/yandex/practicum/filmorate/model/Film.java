@@ -15,7 +15,6 @@ public class Film {
     private int id;
     @Size(min = 1, message = "Name may not be empty")
     @NotBlank(message = "Name may not be null")
-    //@NotNull(message = "Name may not be null")
     private String name;
     @Size(max = 200, message = "Description max string value 200 chars")
     private String description;
