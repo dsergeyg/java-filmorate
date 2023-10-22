@@ -59,8 +59,7 @@ public class UserController {
             throw new ValidationException("Login may not contain blanks " + user);
         if (isCreate) {
             user.setId(++idSequence);
-        }
-        else {
+        } else {
             if (!users.containsKey(user.getId())) {
                 throw new ValidationException("Object not found " + user);
             }

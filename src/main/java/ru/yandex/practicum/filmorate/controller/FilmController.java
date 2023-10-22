@@ -58,8 +58,7 @@ public class FilmController {
             throw new ValidationException("Release date may not be before " + formatter.format(LocalDateTime.now()) + " " + film);
         if (isCreate) {
             film.setId(++idSequence);
-        }
-        else {
+        } else {
             if (!films.containsKey(film.getId())) {
                 throw new ValidationException("Object not found " + film);
             }
