@@ -1,55 +1,70 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 
-import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import javax.validation.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
-@Validated
 @RestController
 @Slf4j
 public class FilmController {
+
+    private final ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+    private final Validator validator = factory.getValidator();
+    public static final LocalDate MINDATE = LocalDate.of(1895, 12, 28);
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+    private int idSequence = 0;
     private final Map<Integer, Film> films = new HashMap<>();
 
     @PostMapping("/films")
-    public Film addFilm(@Valid @RequestBody Film film, BindingResult result) {
-        if (result.hasErrors()) {
-            for (FieldError fieldError : result.getFieldErrors())
-                log.error(fieldError.getDefaultMessage());
+    public Film postFilm(@RequestBody Film film) throws ValidationException {
+        log.info("Получен запрос на создание User " + film);
+        try {
+            return filmController(film, true);
+        } catch (ValidationException e) {
+            log.error(e.getMessage());
+            throw new ValidationException("Bad request: " + e.getMessage());
         }
-        log.info("Получен запрос на создание" + film);
-        int id = film.getId();
-        films.put(id, film);
-        return films.get(id);
     }
 
     @PutMapping("/films")
-    public Film updateFilm(@Valid @RequestBody Film film, BindingResult result) {
-        if (result.hasErrors()) {
-            for (FieldError fieldError : result.getFieldErrors())
-                log.error(fieldError.getDefaultMessage());
-        }
-        int id = film.getId();
-        if (films.containsKey(id)) {
-            films.put(id, film);
-            return films.get(id);
-        } else {
-            log.info(film + " Not found!");
-            throw new ValidationException(film + " Not found!");
+    public Film putFilm(@RequestBody Film film) throws ValidationException {
+        log.info("Получен запрос на обновление User " + film);
+        try {
+            return filmController(film, false);
+        } catch (ValidationException e) {
+            log.error(e.getMessage());
+            throw new ValidationException("Bad request");
         }
     }
 
     @GetMapping("/films")
-    public List<Film> listFilms() {
+    public List<Film> getFilms() {
         return new ArrayList<>(films.values());
+    }
+
+    private Film filmController(Film film, boolean isCreate) throws ValidationException {
+        Optional<ConstraintViolation<Film>> violation = validator.validate(film).stream().findFirst();
+        if (violation.isPresent()) {
+            throw new ValidationException(violation.get().getMessage());
+        }
+        if (!film.getReleaseDate().isAfter(MINDATE.minusDays(1)))
+            throw new ValidationException("Release date may not be before " + formatter.format(LocalDateTime.now()) + " " + film);
+        if (isCreate) {
+            film.setId(++idSequence);
+        }
+        else {
+            if (!films.containsKey(film.getId())) {
+                throw new ValidationException("Object not found " + film);
+            }
+        }
+        films.put(film.getId(), film);
+        return film;
     }
 }
