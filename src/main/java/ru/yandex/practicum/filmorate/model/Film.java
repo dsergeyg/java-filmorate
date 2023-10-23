@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @Data
 public class Film implements Update {
     @NotNull(groups = Update.class)
-    private int id;
+    private Integer id;
     @Size(min = 1, message = "Name may not be empty")
     @NotBlank(message = "Name may not be null")
     private String name;

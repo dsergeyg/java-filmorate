@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @Builder(setterPrefix = "set")
 public class User implements Update {
     @NotNull (groups = Update.class)
-    private int id;
+    private Integer id;
     @Email(message = "Email doesn't match email pattern, example \"my@yandex.ru\"")
     @NotNull(message = "Email may not be empty")
     private String email;
