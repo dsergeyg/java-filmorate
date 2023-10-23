@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.model.Update;
 import javax.validation.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -30,7 +30,7 @@ public class FilmController {
     }
 
     @PutMapping("/films")
-    public Film putFilm(@Validated(User.class) @RequestBody Film film) {
+    public Film putFilm(@Validated(Update.class) @RequestBody Film film) {
         log.info("Получен запрос на обновление User " + film);
         try {
             return filmController(film, false);
