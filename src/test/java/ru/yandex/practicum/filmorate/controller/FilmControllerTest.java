@@ -2,17 +2,17 @@ package ru.yandex.practicum.filmorate.controller;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
-
+import javax.validation.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 public class FilmControllerTest {
 
+    ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+    Validator validator = factory.getValidator();
     private Film film;
     private FilmController filmController;
 
@@ -21,24 +21,25 @@ public class FilmControllerTest {
         filmController = new FilmController();
         film = Film.builder().setName("SomeFilm")
                 .setDescription("SomeDescription")
-                .setReleaseDate(FilmController.MINDATE)
+                .setReleaseDate(FilmController.MIN_DATE)
                 .setDuration(90).build();
     }
 
     @Test
     void postFilm() {
         assertDoesNotThrow(() -> filmController.postFilm(film));
+        assertTrue(validator.validate(film).stream().findFirst().isEmpty());
         film.setName(null);
-        assertThrows(ValidationException.class, () -> filmController.postFilm(film));
+        assertFalse(validator.validate(film).stream().findFirst().isEmpty());
         film.setName(" ");
-        assertThrows(ValidationException.class, () -> filmController.postFilm(film));
+        assertFalse(validator.validate(film).stream().findFirst().isEmpty());
         film.setName("SomeFilm");
         film.setDescription("a".repeat(201));
-        assertThrows(ValidationException.class, () -> filmController.postFilm(film));
+        assertFalse(validator.validate(film).stream().findFirst().isEmpty());
         film.setDescription("SomeDescription");
-        film.setReleaseDate(FilmController.MINDATE.minusDays(1));
+        film.setReleaseDate(FilmController.MIN_DATE.minusDays(1));
         assertThrows(ValidationException.class, () -> filmController.postFilm(film));
-        film.setReleaseDate(FilmController.MINDATE.plusDays(1));
+        film.setReleaseDate(FilmController.MIN_DATE.plusDays(1));
         assertDoesNotThrow(() -> filmController.postFilm(film));
         assertTrue(filmController.getFilms().contains(film));
     }
@@ -50,17 +51,17 @@ public class FilmControllerTest {
         assertTrue(filmController.getFilms().contains(film));
         assertDoesNotThrow(() -> filmController.putFilm(curFilm));
         curFilm.setName(null);
-        assertThrows(ValidationException.class, () -> filmController.putFilm(curFilm));
+        assertFalse(validator.validate(curFilm).stream().findFirst().isEmpty());
         curFilm.setName(" ");
-        assertThrows(ValidationException.class, () -> filmController.postFilm(curFilm));
+        assertFalse(validator.validate(curFilm).stream().findFirst().isEmpty());
         curFilm.setName("SomeFilm");
         curFilm.setDescription("a".repeat(201));
-        assertThrows(ValidationException.class, () -> filmController.postFilm(curFilm));
+        assertFalse(validator.validate(curFilm).stream().findFirst().isEmpty());
         curFilm.setDescription("SomeDescription");
-        curFilm.setReleaseDate(FilmController.MINDATE.minusDays(1));
+        curFilm.setReleaseDate(FilmController.MIN_DATE.minusDays(1));
         assertThrows(ValidationException.class, () -> filmController.postFilm(curFilm));
-        curFilm.setReleaseDate(FilmController.MINDATE.plusDays(1));
-        assertDoesNotThrow(() -> filmController.postFilm(curFilm));
+        curFilm.setReleaseDate(FilmController.MIN_DATE.plusDays(1));
+        assertDoesNotThrow(() -> filmController.putFilm(curFilm));
         assertTrue(filmController.getFilms().contains(curFilm));
     }
 
@@ -68,7 +69,7 @@ public class FilmControllerTest {
     void getFilms() {
         Film curFilm = Film.builder().setName("SomeFilm1")
                 .setDescription("SomeDescription1")
-                .setReleaseDate(FilmController.MINDATE)
+                .setReleaseDate(FilmController.MIN_DATE)
                 .setDuration(110).build();
 
         List<Film> listFilm = new ArrayList<>();

@@ -2,8 +2,10 @@ package ru.yandex.practicum.filmorate.controller;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +14,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class UserControllerTest {
 
+    private final ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+    private final Validator validator = factory.getValidator();
     private User user;
     private UserController userController;
 
@@ -33,12 +37,12 @@ class UserControllerTest {
         user.setName(" ");
         assertEquals(userController.postUser(user).getName(), user.getLogin());
         user.setEmail("SomeEmail");
-        assertThrows(ValidationException.class, () -> userController.postUser(user));
+        assertFalse(validator.validate(user).stream().findFirst().isEmpty());
         user.setEmail("my@yandex.ru");
         user.setBirthday(LocalDate.now());
-        assertThrows(ValidationException.class, () -> userController.postUser(user));
+        assertFalse(validator.validate(user).stream().findFirst().isEmpty());
         user.setBirthday(LocalDate.now().plusDays(1));
-        assertThrows(ValidationException.class, () -> userController.postUser(user));
+        assertFalse(validator.validate(user).stream().findFirst().isEmpty());
         user.setBirthday(LocalDate.now().minusDays(1));
         assertDoesNotThrow(() -> userController.postUser(user));
         assertTrue(userController.getUsers().contains(user));
@@ -55,12 +59,12 @@ class UserControllerTest {
         curUser.setName(" ");
         assertEquals(userController.putUser(curUser).getName(), curUser.getLogin());
         curUser.setEmail("SomeEmail");
-        assertThrows(ValidationException.class, () -> userController.putUser(curUser));
+        assertFalse(validator.validate(curUser).stream().findFirst().isEmpty());
         curUser.setEmail("my@yandex.ru");
         curUser.setBirthday(LocalDate.now());
-        assertThrows(ValidationException.class, () -> userController.putUser(curUser));
+        assertFalse(validator.validate(curUser).stream().findFirst().isEmpty());
         curUser.setBirthday(LocalDate.now().plusDays(1));
-        assertThrows(ValidationException.class, () -> userController.putUser(curUser));
+        assertFalse(validator.validate(curUser).stream().findFirst().isEmpty());
         curUser.setBirthday(LocalDate.now().minusDays(1));
         assertDoesNotThrow(() -> userController.putUser(curUser));
         assertTrue(userController.getUsers().contains(curUser));

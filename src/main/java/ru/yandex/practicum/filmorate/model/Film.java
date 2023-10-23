@@ -2,7 +2,6 @@ package ru.yandex.practicum.filmorate.model;
 
 import lombok.Builder;
 import lombok.Data;
-
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
@@ -11,7 +10,8 @@ import java.time.LocalDate;
 
 @Builder(setterPrefix = "set")
 @Data
-public class Film {
+public class Film implements Update {
+    @NotNull(groups = Update.class)
     private int id;
     @Size(min = 1, message = "Name may not be empty")
     @NotBlank(message = "Name may not be null")
