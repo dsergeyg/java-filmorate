@@ -1,62 +1,57 @@
 package ru.yandex.practicum.filmorate.controller;
 
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Update;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.UserService;
 import javax.validation.*;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @RestController
-@Slf4j
 public class UserController {
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy hh:mm:ss");
-    private final Map<Integer, User> users = new HashMap<>();
-    private int idSequence = 0;
+
+    private final UserService userService;
+
+    @Autowired
+    public UserController (UserService userService) {
+        this.userService = userService;
+    }
 
     @PostMapping("/users")
-    public User postUser(@Valid @RequestBody User user) throws ValidationException {
-        log.info(formatter.format(LocalDateTime.now()) +  "Получен запрос на создание User " + user);
-        try {
-            return userController(user, true);
-        } catch (ValidationException e) {
-            log.error(e.getMessage());
-            throw new ValidationException("Bad request");
-        }
+    public User postUser(@Valid @RequestBody User user) {
+        return userService.userController(user, true);
     }
 
     @PutMapping("/users")
-    public User putUser(@Validated(Update.class) @RequestBody User user) throws ValidationException {
-        log.info(formatter.format(LocalDateTime.now()) +  "Получен запрос на обновление User " + user);
-        try {
-            return userController(user, false);
-        } catch (ValidationException e) {
-            log.error(e.getMessage());
-            throw new ValidationException("Bad request");
-        }
+    public User putUser(@Validated(Update.class) @RequestBody User user) {
+        return userService.userController(user, false);
     }
 
     @GetMapping("/users")
     public List<User> getUsers() {
-        return new ArrayList<>(users.values());
+        return userService.getUsers();
     }
 
-    private User userController(User user, boolean isCreate) throws ValidationException {
-        if (user.getLogin().contains(" "))
-            throw new ValidationException("Login may not contain blanks " + user);
-        if (isCreate) {
-            user.setId(++idSequence);
-        } else {
-            if (!users.containsKey(user.getId())) {
-                throw new ValidationException("Object not found " + user);
-            }
-        }
-        if (user.getName() == null || user.getName().isBlank())
-            user.setName(user.getLogin());
-        users.put(user.getId(), user);
-        return user;
+    @PutMapping("/users/{id}/friends/{friendId}")
+    public User putFriend(@PathVariable String id, @PathVariable String friendId) {
+        return userService.friendsController(id, friendId, true);
     }
+
+    @DeleteMapping("/users/{id}/friends/{friendId}")
+    public User deleteFriend(@PathVariable String id, @PathVariable String friendId) {
+        return userService.friendsController(id, friendId, false);
+    }
+
+    @GetMapping("/users/{id}/friends")
+    public List<Integer> getFriends(@PathVariable String id) {
+        return userService.getFriendList(id);
+    }
+
+    @GetMapping("/users/{id}/friends/common/{otherId}")
+    public List<Integer> getCommonFriends(@PathVariable String id, @PathVariable String otherId) {
+        return userService.getCommonFriendList(id, otherId);
+    }
+
 }
