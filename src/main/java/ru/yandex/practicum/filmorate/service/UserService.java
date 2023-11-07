@@ -10,6 +10,7 @@ import ru.yandex.practicum.filmorate.storage.UserStorage;
 import javax.validation.ValidationException;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -81,16 +82,17 @@ public class UserService {
             throw new NotFoundException("Пользователь id = " + curId + " не найден!");
     }
 
-    public List<Integer> getFriendList(String id) throws NumberFormatException, NoSuchElementException {
+    public List<User> getFriendList(String id) throws NumberFormatException, NoSuchElementException {
         log.info(UtilService.getDateWithTimeStr(LocalDateTime.now()) + " Получен запрос на получение списка друзей пользователя с id = " + id);
         int curId = Integer.parseInt(id);
-        if (userStorage.getUserStorage().containsKey(curId))
-            return new ArrayList<>(userStorage.getUserStorage().get(curId).getFriendsList());
-        else
+        if (userStorage.getUserStorage().containsKey(curId)) {
+            List<Integer> idFriends = new ArrayList<>(userStorage.getUserStorage().get(curId).getFriendsList());
+            return userStorage.getUserStorage().values().stream().filter(user -> idFriends.contains(user.getId())).collect(Collectors.toList());
+        } else
             throw new NoSuchElementException("Пользователь id = " + curId + " не найден!");
     }
 
-    public List<Integer> getCommonFriendList(String id, String otherId) throws NumberFormatException, NotFoundException {
+    public List<User> getCommonFriendList(String id, String otherId) throws NumberFormatException, NotFoundException {
         log.info(UtilService.getDateWithTimeStr(LocalDateTime.now()) + " Получен запрос на получение списка общих друзей пользователя с id = " + id + " и пользователя с id = " + otherId);
         int curId = Integer.parseInt(id);
         int curOtherId = Integer.parseInt(otherId);
@@ -98,7 +100,7 @@ public class UserService {
             if (userStorage.getUserStorage().containsKey(curOtherId)) {
                 List<Integer> result = new ArrayList<>(userStorage.getUserStorage().get(curId).getFriendsList());
                 result.retainAll(new ArrayList<>(userStorage.getUserStorage().get(curOtherId).getFriendsList()));
-                return result;
+                return userStorage.getUserStorage().values().stream().filter(user -> result.contains(user.getId())).collect(Collectors.toList());
             } else
                 throw new NotFoundException("Пользователь otherId = " + curOtherId + " не найден!");
         } else
