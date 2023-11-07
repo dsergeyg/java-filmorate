@@ -1,61 +1,56 @@
 package ru.yandex.practicum.filmorate.controller;
 
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Update;
+import ru.yandex.practicum.filmorate.service.FilmService;
 import javax.validation.*;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @RestController
-@Slf4j
 public class FilmController {
-    public static final LocalDate MIN_DATE = LocalDate.of(1895, 12, 28);
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-    private int idSequence = 0;
-    private final Map<Integer, Film> films = new HashMap<>();
+
+    private final FilmService filmService;
+
+    @Autowired
+    public FilmController(FilmService filmService) {
+       this.filmService = filmService;
+    }
 
     @PostMapping("/films")
     public Film postFilm(@Valid @RequestBody Film film) {
-        log.info("Получен запрос на создание User " + film);
-        try {
-            return filmController(film, true);
-        } catch (ValidationException e) {
-            log.error(e.getMessage());
-            throw new ValidationException("Bad request: " + e.getMessage());
-        }
+        return filmService.filmController(film, true);
     }
 
     @PutMapping("/films")
     public Film putFilm(@Validated(Update.class) @RequestBody Film film) {
-        log.info("Получен запрос на обновление User " + film);
-        try {
-            return filmController(film, false);
-        } catch (ValidationException e) {
-            log.error(e.getMessage());
-            throw new ValidationException("Bad request");
-        }
+        return filmService.filmController(film, false);
     }
 
     @GetMapping("/films")
     public List<Film> getFilms() {
-        return new ArrayList<>(films.values());
+        return filmService.getFilms();
     }
 
-    private Film filmController(Film film, boolean isCreate) throws ValidationException {
-        if (!film.getReleaseDate().isAfter(MIN_DATE.minusDays(1)))
-            throw new ValidationException("Release date may not be before " + formatter.format(MIN_DATE) + " " + film);
-        if (isCreate) {
-            film.setId(++idSequence);
-        } else {
-            if (!films.containsKey(film.getId())) {
-                throw new ValidationException("Object not found " + film);
-            }
-        }
-        films.put(film.getId(), film);
-        return film;
+    @GetMapping("/films/{id}")
+    public Film getFilm(@PathVariable String id) {
+        return filmService.getFilm(id);
+    }
+
+    @PutMapping("/films/{id}/like/{userId}")
+    public Film putLikeToFilm(@PathVariable String id, @PathVariable String userId) {
+        return filmService.likeController(id, userId, true);
+    }
+
+    @DeleteMapping("/films/{id}/like/{userId}")
+    public Film deleteLikeFromFilm(@PathVariable String id, @PathVariable String userId) {
+        return filmService.likeController(id, userId, false);
+    }
+
+    @GetMapping("/films/popular")
+    public List<Film> getPopularFilm(@RequestParam(name = "count", required = false, defaultValue = "10") String count) {
+        return filmService.getCountPopularFilms(count);
     }
 }
