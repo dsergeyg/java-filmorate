@@ -5,6 +5,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Update;
+import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.FilmService;
 import javax.validation.*;
 import java.util.*;
@@ -32,6 +33,11 @@ public class FilmController {
     @GetMapping("/films")
     public List<Film> getFilms() {
         return filmService.getFilms();
+    }
+
+    @GetMapping("/films/{id}")
+    public Film getFilm(@PathVariable String id) {
+        return filmService.getFilm(id);
     }
 
     @PutMapping("/films/{id}/like/{userId}")

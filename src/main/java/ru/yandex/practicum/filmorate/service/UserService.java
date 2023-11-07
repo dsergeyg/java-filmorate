@@ -51,6 +51,14 @@ public class UserService {
         return new ArrayList<>(userStorage.getUserStorage().values());
     }
 
+    public User getUser(String id) throws NumberFormatException, NotFoundException {
+        int curId = Integer.parseInt(id);
+        if (userStorage.getUserStorage().containsKey(curId))
+            return userStorage.getUserStorage().get(curId);
+        else
+            throw new NotFoundException("Пользователь id = " + curId + " не найден!");
+    }
+
     public User friendsController(String id, String friendId, boolean isAdd) throws NumberFormatException, NotFoundException {
         log.info(UtilService.getDateWithTimeStr(LocalDateTime.now()) + " Получен запрос на " + (isAdd ? "добавление" : "удаление") + " пользователя " + friendId + " в друзья пользователю " + id);
         int curId = Integer.parseInt(id);

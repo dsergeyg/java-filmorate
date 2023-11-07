@@ -50,6 +50,14 @@ public class FilmService {
         return new ArrayList<>(filmStorage.getFilmStorage().values());
     }
 
+    public Film getFilm(String id) throws NumberFormatException, NotFoundException {
+        int curId = Integer.parseInt(id);
+        if (filmStorage.getFilmStorage().containsKey(curId))
+            return filmStorage.getFilmStorage().get(curId);
+        else
+            throw new NotFoundException("Пользователь id = " + curId + " не найден!");
+    }
+
     public Film likeController(String id, String userId, boolean isAdd) throws NumberFormatException, NotFoundException {
         log.info(UtilService.getDateWithTimeStr(LocalDateTime.now()) +  " Для фильма: " + id + ", получен запрос на " + (isAdd ? "добавление" : "удаление") + " лайка пользователя: " + userId);
         int curId = Integer.parseInt(id);
