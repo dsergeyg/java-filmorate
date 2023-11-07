@@ -19,7 +19,7 @@ public class UserService {
     private int idSequence;
 
     @Autowired
-    public UserService (InMemoryUserStorage userStorage) {
+    public UserService(InMemoryUserStorage userStorage) {
         this.userStorage = userStorage;
         Optional<Integer> maxId = userStorage.getUserStorage().keySet().stream().max(Comparator.naturalOrder());
         this.idSequence = maxId.orElse(0);
@@ -76,13 +76,13 @@ public class UserService {
     public List<Integer> getFriendList(String id) throws NumberFormatException, NoSuchElementException {
         log.info(UtilService.getDateWithTimeStr(LocalDateTime.now()) + " Получен запрос на получение списка друзей пользователя с id = " + id);
         int curId = Integer.parseInt(id);
-        if(userStorage.getUserStorage().containsKey(curId))
+        if (userStorage.getUserStorage().containsKey(curId))
             return new ArrayList<>(userStorage.getUserStorage().get(curId).getFriendsList());
         else
             throw new NoSuchElementException("Пользователь id = " + curId + " не найден!");
     }
 
-    public List<Integer> getCommonFriendList (String id, String otherId) throws NumberFormatException, NotFoundException {
+    public List<Integer> getCommonFriendList(String id, String otherId) throws NumberFormatException, NotFoundException {
         log.info(UtilService.getDateWithTimeStr(LocalDateTime.now()) + " Получен запрос на получение списка общих друзей пользователя с id = " + id + " и пользователя с id = " + otherId);
         int curId = Integer.parseInt(id);
         int curOtherId = Integer.parseInt(otherId);
