@@ -28,7 +28,7 @@ public class FilmService {
 
     public Film filmController(Film film, boolean isCreate) throws ValidationException {
         log.info(UtilService.getDateWithTimeStr(LocalDateTime.now()) + " Получен запрос на " + (isCreate ? "создание" : "обновление") + " Film: " + film);
-        if (!film.getReleaseDate().isAfter(UtilService.MIN_FILM_DATE.minusDays(1)))
+        if (film.getReleaseDate().isBefore(UtilService.MIN_FILM_DATE))
             throw new ValidationException("Release date may not be before " + UtilService.getOnlyDateStr(UtilService.MIN_FILM_DATE) + " " + film);
         if (isCreate) {
             film.setId(++idSequence);
