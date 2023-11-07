@@ -51,7 +51,7 @@ public class FilmService {
     }
 
     public Film likeController(String id, String userId, boolean isAdd) throws NumberFormatException, NotFoundException {
-        log.info(UtilService.getDateWithTimeStr(LocalDateTime.now()) +  " Для фильма: " + id + ", получен запрос на " + (isAdd ? "добавление" : "удаление") + " лайка пользователя: " + userId );
+        log.info(UtilService.getDateWithTimeStr(LocalDateTime.now()) +  " Для фильма: " + id + ", получен запрос на " + (isAdd ? "добавление" : "удаление") + " лайка пользователя: " + userId);
         int curId = Integer.parseInt(id);
         int curUserId = Integer.parseInt(userId);
         if (filmStorage.getFilmStorage().containsKey(curId)) {
