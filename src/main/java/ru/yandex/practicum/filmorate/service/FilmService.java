@@ -80,7 +80,7 @@ public class FilmService {
             throw new ValidationException("Release date may not be before " + UtilService.getOnlyDateStr(UtilService.MIN_FILM_DATE) + " " + film);
     }
 
-    private void filmCheck(long id) throws NotFoundException{
+    private void filmCheck(long id) throws NotFoundException {
         if (filmStorage.getFilmById(id) == null)
             throw new NotFoundException("Фильм id = " + id + " не найден!");
     }

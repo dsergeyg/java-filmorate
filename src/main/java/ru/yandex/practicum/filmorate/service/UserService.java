@@ -7,6 +7,7 @@ import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
+
 import javax.validation.ValidationException;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -51,7 +52,7 @@ public class UserService {
 
     public User addFriends(long id, long friendId) throws NotFoundException {
         log.info(UtilService.getDateWithTimeStr(LocalDateTime.now()) + " Получен запрос на добавление пользователя " + friendId + " в друзья пользователю " + id);
-        friendDataCheck(id,friendId);
+        friendDataCheck(id, friendId);
         User user = userStorage.getUserById(id);
         User friendUser = userStorage.getUserById(friendId);
         user.getFriendsList().add(friendId);
@@ -61,7 +62,7 @@ public class UserService {
 
     public User deleteFriends(long id, long friendId) throws NotFoundException {
         log.info(UtilService.getDateWithTimeStr(LocalDateTime.now()) + " Получен запрос на удаление пользователя " + friendId + " из друзей пользователя " + id);
-        friendDataCheck(id,friendId);
+        friendDataCheck(id, friendId);
         User user = userStorage.getUserById(id);
         User friendUser = userStorage.getUserById(friendId);
         user.getFriendsList().remove(friendId);
