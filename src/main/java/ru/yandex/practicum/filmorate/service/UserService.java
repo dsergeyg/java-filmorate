@@ -103,10 +103,11 @@ public class UserService {
             throw new NotFoundException("Пользователь id = " + id + " не найден!");
     }
 
-    private void userValidate(User user) {
+    private void userValidate(User user) throws ValidationException {
         if (user.getLogin().contains(" "))
             throw new ValidationException("Login may not contain blanks " + user);
         if (user.getName() == null || user.getName().isBlank())
             user.setName(user.getLogin());
+        user.setFriendsList(new HashSet<>());
     }
 }

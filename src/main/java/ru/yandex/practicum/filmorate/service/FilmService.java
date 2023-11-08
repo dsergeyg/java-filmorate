@@ -79,6 +79,7 @@ public class FilmService {
     private void filmValidation(Film film) throws ValidationException {
         if (film.getReleaseDate().isBefore(UtilService.MIN_FILM_DATE))
             throw new ValidationException("Release date may not be before " + UtilService.getOnlyDateStr(UtilService.MIN_FILM_DATE) + " " + film);
+        film.setLikesList(new HashSet<>());
     }
 
     private void filmCheck(long id) throws NotFoundException {

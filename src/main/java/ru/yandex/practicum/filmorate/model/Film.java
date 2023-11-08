@@ -10,7 +10,6 @@ import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.HashSet;
-import java.util.Set;
 
 @Builder(setterPrefix = "set")
 @Data
@@ -27,5 +26,5 @@ public class Film implements Update {
     @Positive(message = "Duration may not be negative")
     private long duration;
     @JsonIgnore
-    private Set<Long> likesList = new HashSet<>();
+    private HashSet<Long> likesList;
 }
