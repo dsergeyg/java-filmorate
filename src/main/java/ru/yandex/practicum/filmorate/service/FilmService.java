@@ -62,7 +62,10 @@ public class FilmService {
         log.info(UtilService.getDateWithTimeStr(LocalDateTime.now()) + " Для фильма: " + id + ", получен запрос на удаление лайка пользователя: " + userId);
         filmCheck(id);
         Film film = filmStorage.getFilmById(id);
-        film.getLikesList().remove(userId);
+        if (film.getLikesList().contains(userId))
+            film.getLikesList().remove(userId);
+        else
+            throw new NotFoundException("лайк с id = " + userId + " не существует");
         return film;
     }
 
