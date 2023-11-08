@@ -50,7 +50,7 @@ public class FilmService {
     }
 
     public Film addLike(long id, long userId) throws NotFoundException {
-        log.info(UtilService.getDateWithTimeStr(LocalDateTime.now()) +  " Для фильма: " + id + ", получен запрос на добавление лайка пользователя: " + userId);
+        log.info(UtilService.getDateWithTimeStr(LocalDateTime.now()) + " Для фильма: " + id + ", получен запрос на добавление лайка пользователя: " + userId);
         filmCheck(id);
         Film film = filmStorage.getFilmById(id);
         film.getLikesList().add(userId);
