@@ -16,7 +16,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class UserControllerTest {
-/*
+
     private final ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
     private final Validator validator = factory.getValidator();
     private User user;
@@ -25,11 +25,11 @@ class UserControllerTest {
     @BeforeEach
     void setUp() {
         userController = new UserController(new UserService(new InMemoryUserStorage()));
-        user = User.builder().setLogin("SomeLogin")
-                .setName("SomeName")
-                .setEmail("my@yandex.ru")
-                .setBirthday(LocalDate.of(1985,10,22))
-                .build();
+        user = new User();
+        user.setLogin("SomeLogin");
+        user.setName("SomeName");
+        user.setEmail("my@yandex.ru");
+        user.setBirthday(LocalDate.of(1985, 10, 22));
     }
 
     @Test
@@ -75,11 +75,11 @@ class UserControllerTest {
 
     @Test
     void getUsers() {
-        User curUser = User.builder().setLogin("SomeLogin1")
-                .setName("SomeName1")
-                .setEmail("my@yandex.ru")
-                .setBirthday(LocalDate.now().minusDays(1))
-                .build();
+        User curUser = new User();
+        curUser.setLogin("SomeLogin1");
+        curUser.setName("SomeName1");
+        curUser.setEmail("my@yandex.ru");
+        curUser.setBirthday(LocalDate.now().minusDays(1));
 
         List<User> listUser = new ArrayList<>();
         listUser.add(userController.postUser(user));
@@ -91,5 +91,4 @@ class UserControllerTest {
         userController.putUser(curUser);
         assertEquals(listUser, userController.getUsers());
     }
- */
 }
