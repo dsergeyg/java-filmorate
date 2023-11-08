@@ -7,6 +7,7 @@ import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
+
 import javax.validation.ValidationException;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -58,7 +59,7 @@ public class FilmService {
     }
 
     public Film deleteLike(long id, long userId) throws NotFoundException {
-        log.info(UtilService.getDateWithTimeStr(LocalDateTime.now()) +  " Для фильма: " + id + ", получен запрос на удаление лайка пользователя: " + userId);
+        log.info(UtilService.getDateWithTimeStr(LocalDateTime.now()) + " Для фильма: " + id + ", получен запрос на удаление лайка пользователя: " + userId);
         filmCheck(id);
         Film film = filmStorage.getFilmById(id);
         film.getLikesList().remove(userId);

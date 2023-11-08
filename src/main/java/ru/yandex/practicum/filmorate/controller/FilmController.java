@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Update;
 import ru.yandex.practicum.filmorate.service.FilmService;
+
 import javax.validation.*;
 import java.util.*;
 
@@ -16,7 +17,7 @@ public class FilmController {
 
     @Autowired
     public FilmController(FilmService filmService) {
-       this.filmService = filmService;
+        this.filmService = filmService;
     }
 
     @PostMapping("/films")

@@ -12,6 +12,7 @@ import java.util.Map;
 public class InMemoryUserStorage implements UserStorage {
     private final Map<Long, User> users = new HashMap<>();
     private long idSequence;
+
     @Override
     public void addUserToStorage(User user) {
         user.setId(++idSequence);
