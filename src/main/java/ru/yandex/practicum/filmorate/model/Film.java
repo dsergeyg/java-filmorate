@@ -1,7 +1,9 @@
 package ru.yandex.practicum.filmorate.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Data;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
@@ -13,7 +15,7 @@ import java.util.HashSet;
 @Data
 public class Film implements Update {
     @NotNull(groups = Update.class)
-    private Integer id;
+    private long id;
     @Size(min = 1, message = "Name may not be empty")
     @NotBlank(message = "Name may not be null")
     private String name;
@@ -23,5 +25,6 @@ public class Film implements Update {
     private LocalDate releaseDate;
     @Positive(message = "Duration may not be negative")
     private long duration;
-    private HashSet<Integer> likesList;
+    @JsonIgnore
+    private HashSet<Long> likesList;
 }
