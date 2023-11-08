@@ -46,34 +46,24 @@ public class UserService {
     }
 
     public User getUser(long id) throws NotFoundException {
-        userDataCheck(id);
+        log.info(UtilService.getDateWithTimeStr(LocalDateTime.now()) + " Получен запрос на получение пользователя");
         return userStorage.getUserById(id);
     }
 
     public User addFriends(long id, long friendId) throws NotFoundException {
         log.info(UtilService.getDateWithTimeStr(LocalDateTime.now()) + " Получен запрос на добавление пользователя " + friendId + " в друзья пользователю " + id);
-        friendDataCheck(id, friendId);
-        User user = userStorage.getUserById(id);
-        User friendUser = userStorage.getUserById(friendId);
-        user.getFriendsList().add(friendId);
-        friendUser.getFriendsList().add(id);
-        return user;
+        return userStorage.addFriend(id, friendId);
     }
 
     public User deleteFriends(long id, long friendId) throws NotFoundException {
         log.info(UtilService.getDateWithTimeStr(LocalDateTime.now()) + " Получен запрос на удаление пользователя " + friendId + " из друзей пользователя " + id);
-        friendDataCheck(id, friendId);
-        User user = userStorage.getUserById(id);
-        User friendUser = userStorage.getUserById(friendId);
-        user.getFriendsList().remove(friendId);
-        friendUser.getFriendsList().remove(id);
-        return user;
+        return userStorage.deleteFriend(id, friendId);
     }
 
     public List<User> getFriendList(long id) throws NotFoundException {
         log.info(UtilService.getDateWithTimeStr(LocalDateTime.now()) + " Получен запрос на получение списка друзей пользователя с id = " + id);
-        userDataCheck(id);
-        Set<Long> friends = userStorage.getUserById(id).getFriendsList();
+        userStorage.userCheck(id);
+        List<Long> friends = userStorage.getFriends(id);
         return friends
                 .stream()
                 .map(userStorage::getUserById)
@@ -82,9 +72,10 @@ public class UserService {
 
     public List<User> getCommonFriendList(long id, long otherId) throws NotFoundException {
         log.info(UtilService.getDateWithTimeStr(LocalDateTime.now()) + " Получен запрос на получение списка общих друзей пользователя с id = " + id + " и пользователя с id = " + otherId);
-        friendDataCheck(id, otherId);
-        Set<Long> friends = userStorage.getUserById(id).getFriendsList();
-        Set<Long> otherFriends = userStorage.getUserById(otherId).getFriendsList();
+        userStorage.userCheck(id);
+        userStorage.userCheck(otherId);
+        List<Long> friends = userStorage.getFriends(id);
+        List<Long> otherFriends = userStorage.getFriends(otherId);
         return friends
                 .stream()
                 .filter(otherFriends::contains)
@@ -92,22 +83,10 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-    private void friendDataCheck(long id, long secondId) throws NotFoundException {
-        userDataCheck(id);
-        if (userStorage.getUserById(secondId) == null)
-            throw new NotFoundException("Пользователь secondId = " + secondId + " не найден!");
-    }
-
-    private void userDataCheck(long id) throws NotFoundException {
-        if (userStorage.getUserById(id) == null)
-            throw new NotFoundException("Пользователь id = " + id + " не найден!");
-    }
-
     private void userValidate(User user) throws ValidationException {
         if (user.getLogin().contains(" "))
             throw new ValidationException("Login may not contain blanks " + user);
         if (user.getName() == null || user.getName().isBlank())
             user.setName(user.getLogin());
-        user.setFriendsList(new HashSet<>());
     }
 }

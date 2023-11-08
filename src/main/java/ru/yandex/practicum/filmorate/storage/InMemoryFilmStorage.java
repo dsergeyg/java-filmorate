@@ -1,6 +1,8 @@
 package ru.yandex.practicum.filmorate.storage;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.util.ArrayList;
@@ -11,7 +13,13 @@ import java.util.Map;
 @Component
 public class InMemoryFilmStorage implements FilmStorage {
     private final Map<Long, Film> films = new HashMap<>();
+    @Autowired
+    private final UserStorage userStorage;
     private long idSequence;
+
+    public InMemoryFilmStorage(InMemoryUserStorage userStorage) {
+        this.userStorage = userStorage;
+    }
 
     @Override
     public void addFilmToStorage(Film film) {
@@ -20,7 +28,8 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     @Override
-    public void updateFilmInStorage(Film film) {
+    public void updateFilmInStorage(Film film) throws NotFoundException {
+        filmCheck(film.getId());
         films.put(film.getId(), film);
     }
 
@@ -30,7 +39,37 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     @Override
-    public Film getFilmById(long id) {
+    public Film getFilmById(long id) throws NotFoundException {
+        filmCheck(id);
         return films.get(id);
+    }
+
+    @Override
+    public Film addLike(long id, long userId) throws NotFoundException {
+        filmCheck(id);
+        userStorage.userCheck(userId);
+        Film film = films.get(id);
+        film.getLikesList().add(userId);
+        return film;
+    }
+
+    @Override
+    public Film deleteLike(long id, long userId) throws NotFoundException {
+        filmCheck(id);
+        userStorage.userCheck(userId);
+        Film film = films.get(id);
+        film.getLikesList().remove(userId);
+        return film;
+    }
+
+    @Override
+    public List<Long> getLikes(long id) {
+        return new ArrayList<>(films.get(id).getLikesList());
+    }
+
+    @Override
+    public void filmCheck(long id) throws NotFoundException {
+        if (films.get(id) == null)
+            throw new NotFoundException("Фильм id = " + id + " не найден!");
     }
 }
