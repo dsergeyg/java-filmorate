@@ -46,27 +46,17 @@ public class FilmService {
     }
 
     public Film getFilm(long id) throws NotFoundException {
-        filmCheck(id);
         return filmStorage.getFilmById(id);
     }
 
     public Film addLike(long id, long userId) throws NotFoundException {
         log.info(UtilService.getDateWithTimeStr(LocalDateTime.now()) + " Для фильма: " + id + ", получен запрос на добавление лайка пользователя: " + userId);
-        filmCheck(id);
-        Film film = filmStorage.getFilmById(id);
-        film.getLikesList().add(userId);
-        return film;
+        return filmStorage.addLike(id, userId);
     }
 
     public Film deleteLike(long id, long userId) throws NotFoundException {
         log.info(UtilService.getDateWithTimeStr(LocalDateTime.now()) + " Для фильма: " + id + ", получен запрос на удаление лайка пользователя: " + userId);
-        filmCheck(id);
-        Film film = filmStorage.getFilmById(id);
-        if (film.getLikesList().contains(userId))
-            film.getLikesList().remove(userId);
-        else
-            throw new NotFoundException("лайк с id = " + userId + " не существует");
-        return film;
+        return filmStorage.deleteLike(id, userId);
     }
 
     public List<Film> getCountPopularFilms(int count) {
@@ -82,11 +72,5 @@ public class FilmService {
     private void filmValidation(Film film) throws ValidationException {
         if (film.getReleaseDate().isBefore(UtilService.MIN_FILM_DATE))
             throw new ValidationException("Release date may not be before " + UtilService.getOnlyDateStr(UtilService.MIN_FILM_DATE) + " " + film);
-        film.setLikesList(new HashSet<>());
-    }
-
-    private void filmCheck(long id) throws NotFoundException {
-        if (filmStorage.getFilmById(id) == null)
-            throw new NotFoundException("Фильм id = " + id + " не найден!");
     }
 }

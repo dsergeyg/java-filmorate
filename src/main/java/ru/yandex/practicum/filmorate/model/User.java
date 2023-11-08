@@ -1,8 +1,7 @@
 package ru.yandex.practicum.filmorate.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -11,8 +10,11 @@ import javax.validation.constraints.Past;
 import java.time.LocalDate;
 import java.util.HashSet;
 
-@Data
-@Builder(setterPrefix = "set")
+@Getter
+@Setter
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
 public class User implements Update {
     @NotNull(groups = Update.class)
     private Long id;
@@ -20,10 +22,10 @@ public class User implements Update {
     @NotNull(message = "Email may not be empty")
     private String email;
     @NotBlank(message = "Login may not be empty")
-    private final String login;
+    private String login;
     private String name;
     @Past(message = "Birthday mast be in the past")
     private LocalDate birthday;
     @JsonIgnore
-    private HashSet<Long> friendsList;
+    private HashSet<Long> friendsList = new HashSet<>();
 }
