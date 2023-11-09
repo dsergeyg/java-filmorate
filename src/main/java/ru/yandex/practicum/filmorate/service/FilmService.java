@@ -7,6 +7,8 @@ import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
+import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
+import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import javax.validation.ValidationException;
 import java.time.LocalDateTime;
@@ -18,10 +20,12 @@ import java.util.stream.Collectors;
 @Slf4j
 public class FilmService {
     private final FilmStorage filmStorage;
+    private final UserStorage userStorage;
 
     @Autowired
-    public FilmService(InMemoryFilmStorage filmStorage) {
+    public FilmService(InMemoryFilmStorage filmStorage, InMemoryUserStorage userStorage) {
         this.filmStorage = filmStorage;
+        this.userStorage = userStorage;
     }
 
     public Film addFilm(Film film) throws ValidationException {
@@ -34,8 +38,6 @@ public class FilmService {
     public Film updateFilm(Film film) throws ValidationException, NotFoundException {
         log.info(UtilService.getDateWithTimeStr(LocalDateTime.now()) + " Получен запрос на обновление Film: " + film);
         filmValidation(film);
-        if (filmStorage.getFilmById(film.getId()) == null)
-            throw new NotFoundException("Object not found " + film);
         filmStorage.updateFilmInStorage(film);
         return film;
     }
@@ -51,11 +53,13 @@ public class FilmService {
 
     public Film addLike(long id, long userId) throws NotFoundException {
         log.info(UtilService.getDateWithTimeStr(LocalDateTime.now()) + " Для фильма: " + id + ", получен запрос на добавление лайка пользователя: " + userId);
+        userStorage.userCheck(userId);
         return filmStorage.addLike(id, userId);
     }
 
     public Film deleteLike(long id, long userId) throws NotFoundException {
         log.info(UtilService.getDateWithTimeStr(LocalDateTime.now()) + " Для фильма: " + id + ", получен запрос на удаление лайка пользователя: " + userId);
+        userStorage.userCheck(userId);
         return filmStorage.deleteLike(id, userId);
     }
 

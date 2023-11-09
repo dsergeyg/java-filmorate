@@ -1,6 +1,5 @@
 package ru.yandex.practicum.filmorate.storage;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
@@ -13,13 +12,7 @@ import java.util.Map;
 @Component
 public class InMemoryFilmStorage implements FilmStorage {
     private final Map<Long, Film> films = new HashMap<>();
-    @Autowired
-    private final UserStorage userStorage;
     private long idSequence;
-
-    public InMemoryFilmStorage(InMemoryUserStorage userStorage) {
-        this.userStorage = userStorage;
-    }
 
     @Override
     public void addFilmToStorage(Film film) {
@@ -47,7 +40,6 @@ public class InMemoryFilmStorage implements FilmStorage {
     @Override
     public Film addLike(long id, long userId) throws NotFoundException {
         filmCheck(id);
-        userStorage.userCheck(userId);
         Film film = films.get(id);
         film.getLikesList().add(userId);
         return film;
@@ -56,7 +48,6 @@ public class InMemoryFilmStorage implements FilmStorage {
     @Override
     public Film deleteLike(long id, long userId) throws NotFoundException {
         filmCheck(id);
-        userStorage.userCheck(userId);
         Film film = films.get(id);
         film.getLikesList().remove(userId);
         return film;
