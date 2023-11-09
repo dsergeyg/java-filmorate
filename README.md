@@ -10,13 +10,13 @@ SELECT film_id
   FROM like_list   
   INNER JOIN film ON like_list.filmid = film.film_id   
 WHERE user_id = {user_id}  
-\
+<br>
 ### Получение спсика всех фильмов пользователя
 \
 SELECT film_id  
   FROM like_list INNER JOIN film ON like_list.filmid = film.film_id  
 WHERE user_id = {user_id}  
-\
+<br>
 ### Получение спсика топ - N популярных фильмов
 \
 SELECT  film.*  
@@ -24,8 +24,8 @@ SELECT  film.*
 FROM like_list INNER JOIN film ON like_list.filmid = film.film_id  
 GROUP BY film.*  
 ORDER BY count_likes DESC  
-LIMIT {N}  
-\
+LIMIT {N}   
+<br>
 ### Получение спсика получение списка общих друзей
 \
 SELECT u.*  
@@ -36,4 +36,3 @@ WHERE EXISTS(SELECT *
                FROM friendship AS f2   
              WHERE f2.user_id = {id}   
                AND f2.friend_id = f1.friend_id)   
-\
