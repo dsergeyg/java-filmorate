@@ -3,54 +3,36 @@
 ## ER - диаграмма
 ![ER-диаграмма](https://github.com/dsergeyg/java-filmorate/blob/6a489fdca055ac0252ffc5f38908e729fb2bfa71/ER%20-%20%D0%B4%D0%B8%D0%B0%D0%B3%D1%80%D0%B0%D0%BC%D0%BC%D0%B0.png)
 
-## Описание таблиц
-### user
-| №     | Название поля | Тип поля | Описание                                   |
-| :---: | :--- | :--- | :--- |
-| 1     |id    | int8 | Превичный ключ, идентификатор пользователя |
-| :---: | :--- | :--- | :--- |
-### friendship
+## Запросы к БД 
+### Получение спсика всех фильмов пользователя
 
-### friendship_state
+SELECT film_id
+  FROM like_list 
+  INNER JOIN film ON like_list.filmid = film.film_id
+WHERE user_id = {user_id}
 
-### like_list
+### Получение спсика всех фильмов пользователя
 
-### film
+SELECT film_id
+  FROM like_list INNER JOIN film ON like_list.filmid = film.film_id
+WHERE user_id = {user_id}
 
-### mpa_raiting
+### Получение спсика топ - N популярных фильмов
 
-### film_ganre
+SELECT  film.*
+       ,COUNT(film_id) AS count_likes
+FROM like_list INNER JOIN film ON like_list.filmid = film.film_i
+GROUP BY film.*
+ORDER BY count_likes DESC
+LIMIT {N}
 
-### ganre
+### Получение спсика получение списка общих друзей
 
-## Описание ключей
-
-### friendship
-
-### friendship_state
-
-### like_list
-
-### film
-
-### mpa_raiting
-
-### film_ganre
-
-### ganre
-
-## Описание идексов
-
-### friendship
-
-### friendship_state
-
-### like_list
-
-### film
-
-### mpa_raiting
-
-### film_ganre
-
-### ganre
+SELECT u.*
+FROM user AS u
+INNER JOIN friendship AS f1 ON f1.friend_id = u.user_id
+                            AND u.user_id = {otherId}
+WHERE EXISTS(SELECT * 
+               FROM friendship AS f2 
+             WHERE f2.user_id = {id} 
+               AND f2.friend_id = f1.friend_id)
