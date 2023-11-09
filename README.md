@@ -13,16 +13,22 @@ WHERE user_id = {user_id}
 ```
 ### Получение спсика всех фильмов пользователя
 ``` roomsql
-SELECT film_id  
-  FROM like_list INNER JOIN film ON like_list.filmid = film.film_id  
+SELECT film.*,
+       mpa_raiting.name
+  FROM like_list  
+  INNER JOIN film ON like_list.filmid = film.film_id
+  INNER JOIN mpa_raiting ON mpa_raiting.raiting_id = film.raiting_id  
 WHERE user_id = {user_id}  
 ```
 ### Получение спсика топ - N популярных фильмов
 ``` roomsql
-SELECT  film.*  
+SELECT  film.*
+       ,mpa_raiting.name  
        ,COUNT(film_id) AS count_likes  
-FROM like_list INNER JOIN film ON like_list.filmid = film.film_id  
-GROUP BY film.*  
+FROM like_list   
+  INNER JOIN film ON like_list.filmid = film.film_id
+  INNER JOIN mpa_raiting ON mpa_raiting.raiting_id = film.raiting_id   
+GROUP BY film.*, mpa_raiting.name  
 ORDER BY count_likes DESC  
 LIMIT {N}   
 ```
