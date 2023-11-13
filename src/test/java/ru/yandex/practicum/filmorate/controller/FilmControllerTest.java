@@ -3,10 +3,16 @@ package ru.yandex.practicum.filmorate.controller;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.service.FilmService;
+import ru.yandex.practicum.filmorate.service.UtilService;
+import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
+import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
+
 import javax.validation.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class FilmControllerTest {
@@ -18,11 +24,12 @@ public class FilmControllerTest {
 
     @BeforeEach
     void setUp() {
-        filmController = new FilmController();
-        film = Film.builder().setName("SomeFilm")
-                .setDescription("SomeDescription")
-                .setReleaseDate(FilmController.MIN_DATE)
-                .setDuration(90).build();
+        filmController = new FilmController(new FilmService(new InMemoryFilmStorage(), new InMemoryUserStorage()));
+        film = new Film();
+        film.setName("SomeFilm");
+        film.setDescription("SomeDescription");
+        film.setReleaseDate(UtilService.MIN_FILM_DATE);
+        film.setDuration(90);
     }
 
     @Test
@@ -37,9 +44,9 @@ public class FilmControllerTest {
         film.setDescription("a".repeat(201));
         assertFalse(validator.validate(film).stream().findFirst().isEmpty());
         film.setDescription("SomeDescription");
-        film.setReleaseDate(FilmController.MIN_DATE.minusDays(1));
+        film.setReleaseDate(UtilService.MIN_FILM_DATE.minusDays(1));
         assertThrows(ValidationException.class, () -> filmController.postFilm(film));
-        film.setReleaseDate(FilmController.MIN_DATE.plusDays(1));
+        film.setReleaseDate(UtilService.MIN_FILM_DATE.plusDays(1));
         assertDoesNotThrow(() -> filmController.postFilm(film));
         assertTrue(filmController.getFilms().contains(film));
     }
@@ -58,19 +65,20 @@ public class FilmControllerTest {
         curFilm.setDescription("a".repeat(201));
         assertFalse(validator.validate(curFilm).stream().findFirst().isEmpty());
         curFilm.setDescription("SomeDescription");
-        curFilm.setReleaseDate(FilmController.MIN_DATE.minusDays(1));
+        curFilm.setReleaseDate(UtilService.MIN_FILM_DATE.minusDays(1));
         assertThrows(ValidationException.class, () -> filmController.postFilm(curFilm));
-        curFilm.setReleaseDate(FilmController.MIN_DATE.plusDays(1));
+        curFilm.setReleaseDate(UtilService.MIN_FILM_DATE.plusDays(1));
         assertDoesNotThrow(() -> filmController.putFilm(curFilm));
         assertTrue(filmController.getFilms().contains(curFilm));
     }
 
     @Test
     void getFilms() {
-        Film curFilm = Film.builder().setName("SomeFilm1")
-                .setDescription("SomeDescription1")
-                .setReleaseDate(FilmController.MIN_DATE)
-                .setDuration(110).build();
+        Film curFilm = new Film();
+        curFilm.setName("SomeFilm1");
+        curFilm.setDescription("SomeDescription1");
+        curFilm.setReleaseDate(UtilService.MIN_FILM_DATE);
+        curFilm.setDuration(110);
 
         List<Film> listFilm = new ArrayList<>();
         listFilm.add(filmController.postFilm(film));

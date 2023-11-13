@@ -3,6 +3,9 @@ package ru.yandex.practicum.filmorate.controller;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.UserService;
+import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
+
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
@@ -21,12 +24,12 @@ class UserControllerTest {
 
     @BeforeEach
     void setUp() {
-        userController = new UserController();
-        user = User.builder().setLogin("SomeLogin")
-                .setName("SomeName")
-                .setEmail("my@yandex.ru")
-                .setBirthday(LocalDate.of(1985,10,22))
-                .build();
+        userController = new UserController(new UserService(new InMemoryUserStorage()));
+        user = new User();
+        user.setLogin("SomeLogin");
+        user.setName("SomeName");
+        user.setEmail("my@yandex.ru");
+        user.setBirthday(LocalDate.of(1985, 10, 22));
     }
 
     @Test
@@ -72,11 +75,11 @@ class UserControllerTest {
 
     @Test
     void getUsers() {
-        User curUser = User.builder().setLogin("SomeLogin1")
-                .setName("SomeName1")
-                .setEmail("my@yandex.ru")
-                .setBirthday(LocalDate.now().minusDays(1))
-                .build();
+        User curUser = new User();
+        curUser.setLogin("SomeLogin1");
+        curUser.setName("SomeName1");
+        curUser.setEmail("my@yandex.ru");
+        curUser.setBirthday(LocalDate.now().minusDays(1));
 
         List<User> listUser = new ArrayList<>();
         listUser.add(userController.postUser(user));
