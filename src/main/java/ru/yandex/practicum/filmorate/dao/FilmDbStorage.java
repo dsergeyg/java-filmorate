@@ -161,7 +161,7 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public List<Rating> getRatings() {
-        String sql = "SELECT rating_id, name FROM mpa_rating order by rating_id";
+        String sql = "SELECT rating_id, name FROM mpa_rating ORDER BY rating_id;";
         return jdbcTemplate.query(sql, (rs, rowNum) -> makeRating(rs));
     }
 
@@ -189,7 +189,7 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public List<Genre> getGenres() {
-        String sql = "SELECT genre_id, name FROM genre";
+        String sql = "SELECT genre_id, name FROM genre order by genre_id;";
         return jdbcTemplate.query(sql, (rs, rowNum) -> makeGenre(rs));
     }
 
@@ -198,7 +198,7 @@ public class FilmDbStorage implements FilmStorage {
         String sql = "SELECT g.genre_id, g.name " +
                 "FROM film_genre AS fg " +
                 "INNER JOIN genre AS g ON g.genre_id = fg.genre_id " +
-                "WHERE fg.film_id = ?";
+                "WHERE fg.film_id = ?;";
         return jdbcTemplate.query(sql, (rs, rowNum) -> makeGenre(rs), id);
     }
 

@@ -1,14 +1,16 @@
-INSERT INTO genre (name) VALUES ('Комедия');
-INSERT INTO genre (name) VALUES ('Драма');
-INSERT INTO genre (name) VALUES ('Мультфильм');
-INSERT INTO genre (name) VALUES ('Триллер');
-INSERT INTO genre (name) VALUES ('Документальный');
-INSERT INTO genre (name) VALUES ('Боевик');
+INSERT INTO genre (name) SELECT name FROM (
+SELECT '1' AS id, 'Комедия' AS Name UNION
+SELECT '2' AS id, 'Драма' AS Name UNION 
+SELECT '3' AS id, 'Мультфильм' AS Name UNION
+SELECT '4' AS id, 'Триллер' AS Name UNION 
+SELECT '5' AS id, 'Документальный' AS Name UNION
+SELECT '6' AS id, 'Боевик' AS Name) WHERE NOT EXISTS (SELECT * FROM genre g WHERE g.name = name) ORDER BY ID;
 
 --------------------------------------------------
 
-INSERT INTO mpa_rating (name) VALUES ('G');
-INSERT INTO mpa_rating (name) VALUES ('PG');
-INSERT INTO mpa_rating (name) VALUES ('PG-13');
-INSERT INTO mpa_rating (name) VALUES ('R');
-INSERT INTO mpa_rating (name) VALUES ('NC-17');
+INSERT INTO mpa_rating (name) SELECT name FROM (
+SELECT '1' AS id, 'G' AS Name UNION
+SELECT '2' AS id, 'PG' AS Name UNION 
+SELECT '3' AS id, 'PG-13' AS Name UNION
+SELECT '4' AS id, 'R' AS Name UNION 
+SELECT '5' AS id, 'NC-17' AS Name) WHERE NOT EXISTS (SELECT * FROM mpa_rating g WHERE g.name = name) ORDER BY id;
