@@ -63,9 +63,10 @@ public class FilmDbStorage implements FilmStorage {
                 film.getDuration(),
                 film.getMpa().getId(),
                 film.getId());
-        if (!film.getGenres().isEmpty()) {
+        if (!film.getGenres().isEmpty())
             addGenresByFilm(film);
-        }
+        else
+            deleteGenresByFilm(film);
         film.setMpa(getRatingById(film.getMpa().getId()));
         log.info("Фильм обновлен: {} {}", film.getId(), film.getName());
     }
@@ -204,8 +205,7 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public void addGenresByFilm(Film film) {
-        String sqlDelete = "DELETE FROM film_genre WHERE film_id = ?;";
-        jdbcTemplate.update(sqlDelete, film.getId());
+        deleteGenresByFilm(film);
 
         String sqlInsert = "INSERT INTO film_genre (film_id, genre_id) VALUES (?, ?);";
 
@@ -217,6 +217,11 @@ public class FilmDbStorage implements FilmStorage {
         film.getGenres().clear();
         film.getGenres().addAll(getGenresByFilmID(film.getId()));
         log.info("Жанры для фильма добавлены: {}", film.getId());
+    }
+
+    private void deleteGenresByFilm(Film film) {
+        String sqlDelete = "DELETE FROM film_genre WHERE film_id = ?;";
+        jdbcTemplate.update(sqlDelete, film.getId());
     }
 
     private Genre makeGenre(ResultSet rs) throws SQLException {
