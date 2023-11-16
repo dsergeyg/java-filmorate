@@ -41,11 +41,11 @@ public class FilmDbStorage implements FilmStorage {
             stmt.setString(2, film.getDescription());
             stmt.setDate(3, Date.valueOf(film.getReleaseDate()));
             stmt.setLong(4, film.getDuration());
-            stmt.setLong(5, film.getMPA().getId());
+            stmt.setLong(5, film.getMpa().getId());
             return stmt;
         }, keyHolder);
         film.setId(keyHolder.getKey().longValue());
-        film.setMPA(getRatingById(film.getMPA().getId()));
+        film.setMpa(getRatingById(film.getMpa().getId()));
         if (!film.getGenres().isEmpty())
             addGenresByFilm(film);
         log.info("Фильм добавлен: {}", film.getName());
@@ -61,12 +61,12 @@ public class FilmDbStorage implements FilmStorage {
                 film.getDescription(),
                 film.getReleaseDate(),
                 film.getDuration(),
-                film.getMPA().getId(),
+                film.getMpa().getId(),
                 film.getId());
         if (!film.getGenres().isEmpty()) {
             addGenresByFilm(film);
         }
-        film.setMPA(getRatingById(film.getMPA().getId()));
+        film.setMpa(getRatingById(film.getMpa().getId()));
         log.info("Фильм обновлен: {} {}", film.getId(), film.getName());
     }
 
