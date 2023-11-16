@@ -41,11 +41,11 @@ public class FilmDbStorage implements FilmStorage {
             stmt.setString(2, film.getDescription());
             stmt.setDate(3, Date.valueOf(film.getReleaseDate()));
             stmt.setLong(4, film.getDuration());
-            stmt.setLong(5, film.getMpa().getId());
+            stmt.setLong(5, film.getMPA().getId());
             return stmt;
         }, keyHolder);
         film.setId(keyHolder.getKey().longValue());
-        film.setMpa(getRatingById(film.getMpa().getId()));
+        film.setMPA(getRatingById(film.getMPA().getId()));
         if (!film.getGenres().isEmpty())
             addGenresByFilm(film);
         log.info("Фильм добавлен: {}", film.getName());
@@ -61,12 +61,12 @@ public class FilmDbStorage implements FilmStorage {
                 film.getDescription(),
                 film.getReleaseDate(),
                 film.getDuration(),
-                film.getMpa().getId(),
+                film.getMPA().getId(),
                 film.getId());
         if (!film.getGenres().isEmpty()) {
             addGenresByFilm(film);
         }
-        film.setMpa(getRatingById(film.getMpa().getId()));
+        film.setMPA(getRatingById(film.getMPA().getId()));
         log.info("Фильм обновлен: {} {}", film.getId(), film.getName());
     }
 
@@ -195,7 +195,10 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public List<Genre> getGenresByFilmID(long id) {
-        String sql = "SELECT genre_id FROM film_genre WHERE film_id = ?";
+        String sql = "SELECT g.genre_id, g.name " +
+                "FROM film_genre AS fg " +
+                "INNER JOIN genre AS g ON g.genre_id = fg.genre_id " +
+                "WHERE fg.film_id = ?";
         return jdbcTemplate.query(sql, (rs, rowNum) -> makeGenre(rs), id);
     }
 
@@ -211,11 +214,13 @@ public class FilmDbStorage implements FilmStorage {
                     film.getId(),
                     genre.getId());
         }
+        film.getGenres().clear();
+        film.getGenres().addAll(getGenresByFilmID(film.getId()));
         log.info("Жанры для фильма добавлены: {}", film.getId());
     }
 
     private Genre makeGenre(ResultSet rs) throws SQLException {
-        long id = rs.getLong("id");
+        long id = rs.getLong("genre_id");
         String name = rs.getString("name");
         return new Genre(id, name);
     }
