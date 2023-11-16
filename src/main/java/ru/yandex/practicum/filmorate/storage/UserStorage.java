@@ -22,5 +22,4 @@ public interface UserStorage {
 
     User acceptFriend(long id, long friendId);
 
-    void userCheck(long id);
 }

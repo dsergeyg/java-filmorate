@@ -82,7 +82,7 @@ public class FilmDbStorageTest {
         UserDbStorage userStorage = new UserDbStorage(jdbcTemplate);
         Film newFilm = new Film(1L, "Some Name", "Some Description", LocalDate.of(1990, 1, 1), 160, new Rating(1, "G"), new HashSet<>(), new HashSet<>());
         User newUser = new User(1L, "user@email.ru", "vanya123", "Ivan Petrov", LocalDate.of(1990, 1, 1), new HashSet<>());
-        User secondNewUser = new User(2L, "user@email.ru", "vanya123", "Ivan Petrov", LocalDate.of(1990, 1, 1), new HashSet<>());
+        User secondNewUser = new User(2L, "user1@email.ru", "vanya1234", "Ivan Petrov", LocalDate.of(1990, 1, 1), new HashSet<>());
 
         filmStorage.addFilmToStorage(newFilm);
         userStorage.addUserToStorage(newUser);
@@ -100,7 +100,7 @@ public class FilmDbStorageTest {
         UserDbStorage userStorage = new UserDbStorage(jdbcTemplate);
         Film newFilm = new Film(1L, "Some Name", "Some Description", LocalDate.of(1990, 1, 1), 160, new Rating(1, "G"), new HashSet<>(), new HashSet<>());
         User newUser = new User(1L, "user@email.ru", "vanya123", "Ivan Petrov", LocalDate.of(1990, 1, 1),  new HashSet<>());
-        User secondNewUser = new User(2L, "user@email.ru", "vanya123", "Ivan Petrov", LocalDate.of(1990, 1, 1), new HashSet<>());
+        User secondNewUser = new User(2L, "user1@email.ru", "vanya1234", "Ivan Petrov", LocalDate.of(1990, 1, 1), new HashSet<>());
 
         filmStorage.addFilmToStorage(newFilm);
         userStorage.addUserToStorage(newUser);
@@ -121,7 +121,7 @@ public class FilmDbStorageTest {
         UserDbStorage userStorage = new UserDbStorage(jdbcTemplate);
         Film newFilm = new Film(1L, "Some Name", "Some Description", LocalDate.of(1990, 1, 1), 160, new Rating(1, "G"), new HashSet<>(), new HashSet<>());
         User newUser = new User(1L, "user@email.ru", "vanya123", "Ivan Petrov", LocalDate.of(1990, 1, 1), new HashSet<>());
-        User secondNewUser = new User(2L, "user@email.ru", "vanya123", "Ivan Petrov", LocalDate.of(1990, 1, 1), new HashSet<>());
+        User secondNewUser = new User(2L, "user1@email.ru", "vanya1234", "Ivan Petrov", LocalDate.of(1990, 1, 1), new HashSet<>());
 
         filmStorage.addFilmToStorage(newFilm);
         userStorage.addUserToStorage(newUser);

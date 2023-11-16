@@ -60,7 +60,7 @@ class UserDbStorageTest {
     public void testGetUsers() {
         UserDbStorage userStorage = new UserDbStorage(jdbcTemplate);
         User newUser = new User(1L, "user@email.ru", "vanya123", "Ivan Petrov", LocalDate.of(1990, 1, 1), new HashSet<>());
-        User secondNewUser = new User(2L, "user@email.ru", "vanya123", "Ivan Petrov", LocalDate.of(1990, 1, 1), new HashSet<>());
+        User secondNewUser = new User(2L, "user1@email.ru", "vanya1234", "Ivan Petrov", LocalDate.of(1990, 1, 1), new HashSet<>());
 
         userStorage.addUserToStorage(newUser);
         userStorage.addUserToStorage(secondNewUser);
@@ -78,7 +78,7 @@ class UserDbStorageTest {
     public void testAddFriend() {
         UserDbStorage userStorage = new UserDbStorage(jdbcTemplate);
         User newUser = new User(1L, "user@email.ru", "vanya123", "Ivan Petrov", LocalDate.of(1990, 1, 1), new HashSet<>());
-        User secondNewUser = new User(2L, "user@email.ru", "vanya123", "Ivan Petrov", LocalDate.of(1990, 1, 1), new HashSet<>());
+        User secondNewUser = new User(2L, "user1@email.ru", "vanya1234", "Ivan Petrov", LocalDate.of(1990, 1, 1), new HashSet<>());
 
         userStorage.addUserToStorage(newUser);
         userStorage.addUserToStorage(secondNewUser);
@@ -93,7 +93,7 @@ class UserDbStorageTest {
     public void testDeleteFriend() {
         UserDbStorage userStorage = new UserDbStorage(jdbcTemplate);
         User newUser = new User(1L, "user@email.ru", "vanya123", "Ivan Petrov", LocalDate.of(1990, 1, 1), new HashSet<>());
-        User secondNewUser = new User(2L, "user@email.ru", "vanya123", "Ivan Petrov", LocalDate.of(1990, 1, 1), new HashSet<>());
+        User secondNewUser = new User(2L, "user1@email.ru", "vanya1234", "Ivan Petrov", LocalDate.of(1990, 1, 1), new HashSet<>());
 
         userStorage.addUserToStorage(newUser);
         userStorage.addUserToStorage(secondNewUser);
@@ -112,7 +112,7 @@ class UserDbStorageTest {
     public void testGetFriends() {
         UserDbStorage userStorage = new UserDbStorage(jdbcTemplate);
         User newUser = new User(1L, "user@email.ru", "vanya123", "Ivan Petrov", LocalDate.of(1990, 1, 1), new HashSet<>());
-        User secondNewUser = new User(2L, "user@email.ru", "vanya123", "Ivan Petrov", LocalDate.of(1990, 1, 1), new HashSet<>());
+        User secondNewUser = new User(2L, "user1@email.ru", "vanya1234", "Ivan Petrov", LocalDate.of(1990, 1, 1), new HashSet<>());
 
         userStorage.addUserToStorage(newUser);
         userStorage.addUserToStorage(secondNewUser);
