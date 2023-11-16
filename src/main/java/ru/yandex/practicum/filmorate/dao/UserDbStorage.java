@@ -79,9 +79,8 @@ public class UserDbStorage implements UserStorage {
     }
 
     @Override
-    public User getUserById(long id) {
+    public User getUserById(long id) throws NotFoundException {
         SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet("SELECT * FROM user_data WHERE user_id = ? LIMIT 1;", id);
-
         if (sqlRowSet.next()) {
             User user = new User(
                     sqlRowSet.getLong("user_id"),
@@ -96,7 +95,7 @@ public class UserDbStorage implements UserStorage {
             return user;
         } else {
             log.info("Пользователь с идентификатором {} не найден.", id);
-            return null;
+            throw new NotFoundException("Пользователь id = " + id + " не найден!");
         }
     }
 

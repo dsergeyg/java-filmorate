@@ -28,7 +28,7 @@ public class Film implements Update {
     @Positive(message = "Duration may not be negative")
     private long duration;
     @NotNull(message = "Name may not be null")
-    private long ratingId;
+    private Rating mpa;
     private HashSet<Long> genreList;
     @JsonIgnore
     @EqualsAndHashCode.Exclude

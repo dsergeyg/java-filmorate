@@ -7,6 +7,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Rating;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
@@ -26,7 +27,7 @@ public class FilmDbStorageTest {
     @Test
     @DirtiesContext
     public void testGetFilmById() {
-        Film newFilm = new Film(1L, "Some Name", "Some Description", LocalDate.of(1990, 1, 1), 160, 1, new HashSet<>(), new HashSet<>());
+        Film newFilm = new Film(1L, "Some Name", "Some Description", LocalDate.of(1990, 1, 1), 160, new Rating(1, "G"), new HashSet<>(), new HashSet<>());
         FilmDbStorage filmStorage = new FilmDbStorage(jdbcTemplate);
         filmStorage.addFilmToStorage(newFilm);
 
@@ -41,11 +42,11 @@ public class FilmDbStorageTest {
     @Test
     @DirtiesContext
     public void testUpdateFilmInStorage() {
-        Film newFilm = new Film(1L, "Some Name", "Some Description", LocalDate.of(1990, 1, 1), 160, 1, new HashSet<>(), new HashSet<>());
+        Film newFilm = new Film(1L, "Some Name", "Some Description", LocalDate.of(1990, 1, 1), 160, new Rating(1, "G"), new HashSet<>(), new HashSet<>());
         FilmDbStorage filmStorage = new FilmDbStorage(jdbcTemplate);
         filmStorage.addFilmToStorage(newFilm);
 
-        Film updFilm = new Film(1L, "Some new Name", "Some new Description", LocalDate.of(1990, 1, 1), 160, 1, new HashSet<>(), new HashSet<>());
+        Film updFilm = new Film(1L, "Some new Name", "Some new Description", LocalDate.of(1990, 1, 1), 160, new Rating(1, "G"), new HashSet<>(), new HashSet<>());
         filmStorage.updateFilmInStorage(updFilm);
 
         Film savedFilm = filmStorage.getFilmById(1);
@@ -60,8 +61,8 @@ public class FilmDbStorageTest {
     @DirtiesContext
     public void testGetFilms() {
         FilmDbStorage filmStorage = new FilmDbStorage(jdbcTemplate);
-        Film newFilm = new Film(1L, "Some Name", "Some Description", LocalDate.of(1990, 1, 1), 160, 1, new HashSet<>(), new HashSet<>());
-        Film secondNewFilm = new Film(2L, "Some Name", "Some Description", LocalDate.of(1990, 1, 1), 160, 1, new HashSet<>(), new HashSet<>());
+        Film newFilm = new Film(1L, "Some Name", "Some Description", LocalDate.of(1990, 1, 1), 160, new Rating(1, "G"), new HashSet<>(), new HashSet<>());
+        Film secondNewFilm = new Film(2L, "Some Name", "Some Description", LocalDate.of(1990, 1, 1), 160, new Rating(1, "G"), new HashSet<>(), new HashSet<>());
 
         filmStorage.addFilmToStorage(newFilm);
         filmStorage.addFilmToStorage(secondNewFilm);
@@ -79,7 +80,7 @@ public class FilmDbStorageTest {
     public void testAddLike() {
         FilmDbStorage filmStorage = new FilmDbStorage(jdbcTemplate);
         UserDbStorage userStorage = new UserDbStorage(jdbcTemplate);
-        Film newFilm = new Film(1L, "Some Name", "Some Description", LocalDate.of(1990, 1, 1), 160, 1, new HashSet<>(), new HashSet<>());
+        Film newFilm = new Film(1L, "Some Name", "Some Description", LocalDate.of(1990, 1, 1), 160, new Rating(1, "G"), new HashSet<>(), new HashSet<>());
         User newUser = new User(1L, "user@email.ru", "vanya123", "Ivan Petrov", LocalDate.of(1990, 1, 1), new HashSet<>());
         User secondNewUser = new User(2L, "user@email.ru", "vanya123", "Ivan Petrov", LocalDate.of(1990, 1, 1), new HashSet<>());
 
@@ -97,7 +98,7 @@ public class FilmDbStorageTest {
     public void testDeleteLike() {
         FilmDbStorage filmStorage = new FilmDbStorage(jdbcTemplate);
         UserDbStorage userStorage = new UserDbStorage(jdbcTemplate);
-        Film newFilm = new Film(1L, "Some Name", "Some Description", LocalDate.of(1990, 1, 1), 160, 1, new HashSet<>(), new HashSet<>());
+        Film newFilm = new Film(1L, "Some Name", "Some Description", LocalDate.of(1990, 1, 1), 160, new Rating(1, "G"), new HashSet<>(), new HashSet<>());
         User newUser = new User(1L, "user@email.ru", "vanya123", "Ivan Petrov", LocalDate.of(1990, 1, 1),  new HashSet<>());
         User secondNewUser = new User(2L, "user@email.ru", "vanya123", "Ivan Petrov", LocalDate.of(1990, 1, 1), new HashSet<>());
 
@@ -118,7 +119,7 @@ public class FilmDbStorageTest {
     public void testGetLikes() {
         FilmDbStorage filmStorage = new FilmDbStorage(jdbcTemplate);
         UserDbStorage userStorage = new UserDbStorage(jdbcTemplate);
-        Film newFilm = new Film(1L, "Some Name", "Some Description", LocalDate.of(1990, 1, 1), 160, 1, new HashSet<>(), new HashSet<>());
+        Film newFilm = new Film(1L, "Some Name", "Some Description", LocalDate.of(1990, 1, 1), 160, new Rating(1, "G"), new HashSet<>(), new HashSet<>());
         User newUser = new User(1L, "user@email.ru", "vanya123", "Ivan Petrov", LocalDate.of(1990, 1, 1), new HashSet<>());
         User secondNewUser = new User(2L, "user@email.ru", "vanya123", "Ivan Petrov", LocalDate.of(1990, 1, 1), new HashSet<>());
 
