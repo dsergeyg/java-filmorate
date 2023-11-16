@@ -15,7 +15,6 @@ import javax.validation.constraints.Size;
 public class Rating {
     @NotBlank(message = "may not by null or empty!")
     long id;
-    @JsonIgnore
     @Size(min = 1, max = 100, message = "Description max string value 100 chars")
     String name;
 }

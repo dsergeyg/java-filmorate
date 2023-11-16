@@ -189,7 +189,7 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public List<Genre> getGenres() {
-        String sql = "SELECT id, name FROM genre";
+        String sql = "SELECT genre_id, name FROM genre";
         return jdbcTemplate.query(sql, (rs, rowNum) -> makeGenre(rs));
     }
 
