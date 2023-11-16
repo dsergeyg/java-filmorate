@@ -3,9 +3,8 @@ package ru.yandex.practicum.filmorate.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.Genre;
-import ru.yandex.practicum.filmorate.model.Rating;
 import ru.yandex.practicum.filmorate.model.Update;
 import ru.yandex.practicum.filmorate.service.FilmService;
 
@@ -13,6 +12,7 @@ import javax.validation.*;
 import java.util.*;
 
 @RestController
+@RequestMapping("/films")
 public class FilmController {
 
     private final FilmService filmService;
@@ -22,58 +22,38 @@ public class FilmController {
         this.filmService = filmService;
     }
 
-    @PostMapping("/films")
+    @PostMapping
     public Film postFilm(@Valid @RequestBody Film film) {
         return filmService.addFilm(film);
     }
 
-    @PutMapping("/films")
+    @PutMapping
     public Film putFilm(@Validated(Update.class) @RequestBody Film film) {
         return filmService.updateFilm(film);
     }
 
-    @GetMapping("/films")
+    @GetMapping
     public List<Film> getFilms() {
         return filmService.getFilms();
     }
 
-    @GetMapping("/films/{id}")
+    @GetMapping("/{id}")
     public Film getFilm(@PathVariable long id) {
         return filmService.getFilm(id);
     }
 
-    @PutMapping("/films/{id}/like/{userId}")
+    @PutMapping("/{id}/like/{userId}")
     public Film putLikeToFilm(@PathVariable long id, @PathVariable long userId) {
         return filmService.addLike(id, userId);
     }
 
-    @DeleteMapping("/films/{id}/like/{userId}")
+    @DeleteMapping("/{id}/like/{userId}")
     public Film deleteLikeFromFilm(@PathVariable long id, @PathVariable long userId) {
         return filmService.deleteLike(id, userId);
     }
 
-    @GetMapping("/films/popular")
+    @GetMapping("/popular")
     public List<Film> getPopularFilm(@RequestParam(name = "count", required = false, defaultValue = "10") int count) {
         return filmService.getCountPopularFilms(count);
-    }
-
-    @GetMapping("/genres")
-    public List<Genre> getGenres() {
-        return filmService.getGenres();
-    }
-
-    @GetMapping("/genres/{id}")
-    public Genre getGenre(@PathVariable long id) {
-        return filmService.getGenre(id);
-    }
-
-    @GetMapping("/mpa")
-    public List<Rating> getRatings() {
-        return filmService.getRatings();
-    }
-
-    @GetMapping("/mpa/{id}")
-    public Rating getRating(@PathVariable long id) {
-        return filmService.getRating(id);
     }
 }

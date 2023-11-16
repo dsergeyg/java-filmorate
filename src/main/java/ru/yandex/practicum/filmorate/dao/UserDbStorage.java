@@ -30,7 +30,7 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public void addUserToStorage(User user) {
-        String sqlInsert = "INSERT INTO user_data (email, login, name, birthday) VALUES (?, ?, ?, ?);";
+        String sqlInsert = "INSERT INTO user_data (email, login, name, birthday) VALUES (?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
@@ -45,8 +45,8 @@ public class UserDbStorage implements UserStorage {
     }
 
     @Override
-    public void updateUserInStorage(User user) throws NotFoundException {
-        userCheck(user.getId());
+    public void updateUserInStorage(User user) {
+        getUserById(user.getId());
         String sqlUpdate = "UPDATE user_data SET email = ?, login = ?, name = ?, birthday = ? WHERE user_id = ?";
 
         jdbcTemplate.update(sqlUpdate,
@@ -79,8 +79,8 @@ public class UserDbStorage implements UserStorage {
     }
 
     @Override
-    public User getUserById(long id) throws NotFoundException {
-        SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet("SELECT * FROM user_data WHERE user_id = ? LIMIT 1;", id);
+    public User getUserById(long id) {
+        SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet("SELECT * FROM user_data WHERE user_id = ? LIMIT 1", id);
         if (sqlRowSet.next()) {
             User user = new User(
                     sqlRowSet.getLong("user_id"),
@@ -100,13 +100,13 @@ public class UserDbStorage implements UserStorage {
     }
 
     @Override
-    public User addFriend(long id, long friendId) throws NotFoundException {
-        userCheck(id);
-        userCheck(friendId);
+    public User addFriend(long id, long friendId) {
+        getUserById(id);
+        getUserById(friendId);
         //"partial index" are not implemented in H2
-        SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet("SELECT * FROM friendship WHERE user_id = ? AND friend_id = ?;", id, friendId);
+        SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet("SELECT * FROM friendship WHERE user_id = ? AND friend_id = ?", id, friendId);
         if (!sqlRowSet.next()) {
-            String sqlInsert = "INSERT INTO friendship (user_id, friend_id) VALUES (?, ?);";
+            String sqlInsert = "INSERT INTO friendship (user_id, friend_id) VALUES (?, ?)";
             jdbcTemplate.update(sqlInsert, id, friendId);
         }
         log.info("Друг добавлен: {} {}", id, friendId);
@@ -114,11 +114,11 @@ public class UserDbStorage implements UserStorage {
     }
 
     @Override
-    public User deleteFriend(long id, long friendId) throws NotFoundException {
-        userCheck(id);
-        userCheck(friendId);
+    public User deleteFriend(long id, long friendId) {
+        getUserById(id);
+        getUserById(friendId);
 
-        String sqlDelete = "DELETE FROM friendship WHERE user_id = ? AND friend_id = ?;";
+        String sqlDelete = "DELETE FROM friendship WHERE user_id = ? AND friend_id = ?";
         jdbcTemplate.update(sqlDelete, id, friendId);
 
         String sqlUpdate = "UPDATE friendship SET accepted = false WHERE user_id = ? AND friend_id = ?";
@@ -129,27 +129,18 @@ public class UserDbStorage implements UserStorage {
     }
 
     @Override
-    public List<Long> getFriends(long id) throws NotFoundException {
+    public List<Long> getFriends(long id) {
         String sql = "SELECT friend_id FROM friendship WHERE user_id = ?";
         return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("friend_id"), id);
     }
 
     @Override
     public User acceptFriend(long id, long friendId) {
-        String sql = "UPDATE friendship SET accepted = true WHERE user_id = ? AND friendId = ?";
-        jdbcTemplate.update(sql, id, friendId);
-
-        SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet("SELECT * FROM friendship WHERE user_id = ? AND friend_id = ?;", friendId, id);
+        SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet("SELECT * FROM friendship WHERE user_id = ? AND friend_id = ?", friendId, id);
         if (!sqlRowSet.next()) {
-            String sqlInsert = "INSERT INTO friendship (user_id, friend_id, accepted) VALUES (?, ?, ?);";
-            jdbcTemplate.update(sqlInsert, friendId, id, true);
+            String sqlInsert = "INSERT INTO friendship (user_id, friend_id) VALUES (?, ?)";
+            jdbcTemplate.update(sqlInsert, friendId, id);
         }
         return getUserById(id);
-    }
-
-    @Override
-    public void userCheck(long id) throws NotFoundException {
-        if (getUserById(id) == null)
-            throw new NotFoundException("Пользователь id = " + id + " не найден!");
     }
 }
