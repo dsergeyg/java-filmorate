@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.annotation.DirtiesContext;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 
@@ -23,6 +24,7 @@ public class FilmDbStorageTest {
     private final JdbcTemplate jdbcTemplate;
 
     @Test
+    @DirtiesContext
     public void testGetFilmById() {
         Film newFilm = new Film(1L, "Some Name", "Some Description", LocalDate.of(1990, 1, 1), 160, 1, new HashSet<>(), new HashSet<>());
         FilmDbStorage filmStorage = new FilmDbStorage(jdbcTemplate);
@@ -37,6 +39,7 @@ public class FilmDbStorageTest {
     }
 
     @Test
+    @DirtiesContext
     public void testUpdateFilmInStorage() {
         Film newFilm = new Film(1L, "Some Name", "Some Description", LocalDate.of(1990, 1, 1), 160, 1, new HashSet<>(), new HashSet<>());
         FilmDbStorage filmStorage = new FilmDbStorage(jdbcTemplate);
@@ -54,6 +57,7 @@ public class FilmDbStorageTest {
     }
 
     @Test
+    @DirtiesContext
     public void testGetFilms() {
         FilmDbStorage filmStorage = new FilmDbStorage(jdbcTemplate);
         Film newFilm = new Film(1L, "Some Name", "Some Description", LocalDate.of(1990, 1, 1), 160, 1, new HashSet<>(), new HashSet<>());
@@ -71,6 +75,7 @@ public class FilmDbStorageTest {
     }
 
     @Test
+    @DirtiesContext
     public void testAddLike() {
         FilmDbStorage filmStorage = new FilmDbStorage(jdbcTemplate);
         UserDbStorage userStorage = new UserDbStorage(jdbcTemplate);
@@ -88,6 +93,7 @@ public class FilmDbStorageTest {
     }
 
     @Test
+    @DirtiesContext
     public void testDeleteLike() {
         FilmDbStorage filmStorage = new FilmDbStorage(jdbcTemplate);
         UserDbStorage userStorage = new UserDbStorage(jdbcTemplate);
@@ -108,6 +114,7 @@ public class FilmDbStorageTest {
     }
 
     @Test
+    @DirtiesContext
     public void testGetLikes() {
         FilmDbStorage filmStorage = new FilmDbStorage(jdbcTemplate);
         UserDbStorage userStorage = new UserDbStorage(jdbcTemplate);

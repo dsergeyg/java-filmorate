@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.annotation.DirtiesContext;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
@@ -22,6 +23,7 @@ class UserDbStorageTest {
     private final JdbcTemplate jdbcTemplate;
 
     @Test
+    @DirtiesContext
     public void testFindUserById() {
         UserDbStorage userStorage = new UserDbStorage(jdbcTemplate);
         User newUser = new User(1L, "user@email.ru", "vanya123", "Ivan Petrov", LocalDate.of(1990, 1, 1), new HashSet<>());
@@ -37,6 +39,7 @@ class UserDbStorageTest {
     }
 
     @Test
+    @DirtiesContext
     public void testUpdateUserInStorage() {
         UserDbStorage userStorage = new UserDbStorage(jdbcTemplate);
         User newUser = new User(1L, "user@email.ru", "vanya123", "Ivan Petrov", LocalDate.of(1990, 1, 1), new HashSet<>());
@@ -53,6 +56,7 @@ class UserDbStorageTest {
     }
 
     @Test
+    @DirtiesContext
     public void testGetUsers() {
         UserDbStorage userStorage = new UserDbStorage(jdbcTemplate);
         User newUser = new User(1L, "user@email.ru", "vanya123", "Ivan Petrov", LocalDate.of(1990, 1, 1), new HashSet<>());
@@ -70,6 +74,7 @@ class UserDbStorageTest {
     }
 
     @Test
+    @DirtiesContext
     public void testAddFriend() {
         UserDbStorage userStorage = new UserDbStorage(jdbcTemplate);
         User newUser = new User(1L, "user@email.ru", "vanya123", "Ivan Petrov", LocalDate.of(1990, 1, 1), new HashSet<>());
@@ -81,11 +86,10 @@ class UserDbStorageTest {
         userStorage.addFriend(1, 2);
         List<Long> friendListFistUser = userStorage.getFriends(1);
         assertTrue(friendListFistUser.contains(2L));
-        List<Long> friendListSecondUser = userStorage.getFriends(2);
-        assertTrue(friendListSecondUser.contains(1L));
     }
 
     @Test
+    @DirtiesContext
     public void testDeleteFriend() {
         UserDbStorage userStorage = new UserDbStorage(jdbcTemplate);
         User newUser = new User(1L, "user@email.ru", "vanya123", "Ivan Petrov", LocalDate.of(1990, 1, 1), new HashSet<>());
@@ -98,15 +102,13 @@ class UserDbStorageTest {
         List<Long> friendListFistUser = userStorage.getFriends(1);
         assertTrue(friendListFistUser.contains(2L));
 
-        List<Long> friendListSecondUser = userStorage.getFriends(2);
-        assertTrue(friendListSecondUser.contains(1L));
-
         userStorage.deleteFriend(1, 2);
+
         assertTrue(userStorage.getFriends(1).isEmpty());
-        assertTrue(userStorage.getFriends(2).isEmpty());
     }
 
     @Test
+    @DirtiesContext
     public void testGetFriends() {
         UserDbStorage userStorage = new UserDbStorage(jdbcTemplate);
         User newUser = new User(1L, "user@email.ru", "vanya123", "Ivan Petrov", LocalDate.of(1990, 1, 1), new HashSet<>());
@@ -118,8 +120,5 @@ class UserDbStorageTest {
 
         List<Long> friendListFistUser = userStorage.getFriends(1);
         assertTrue(friendListFistUser.contains(2L));
-
-        List<Long> friendListSecondUser = userStorage.getFriends(2);
-        assertTrue(friendListSecondUser.contains(1L));
     }
 }

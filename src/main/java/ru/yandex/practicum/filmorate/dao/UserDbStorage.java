@@ -120,10 +120,10 @@ public class UserDbStorage implements UserStorage {
         userCheck(friendId);
 
         String sqlDelete = "DELETE FROM friendship WHERE user_id = ? AND friend_id = ?;";
-        jdbcTemplate.update(sqlDelete, friendId, id);
+        jdbcTemplate.update(sqlDelete, id, friendId);
 
         String sqlUpdate = "UPDATE friendship SET accepted = false WHERE user_id = ? AND friend_id = ?";
-        jdbcTemplate.update(sqlUpdate, id, friendId);
+        jdbcTemplate.update(sqlUpdate, friendId, id);
 
         log.info("Друг удален: {} {}", id, friendId);
         return getUserById(id);

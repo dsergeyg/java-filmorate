@@ -35,7 +35,7 @@ public class FilmDbStorage implements FilmStorage {
                 film.getDescription(),
                 film.getReleaseDate(),
                 film.getDuration(),
-                film.getId());
+                film.getRatingId());
         if (!film.getGenreList().isEmpty()) {
             addGenresByFilm(film);
         }
