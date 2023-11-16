@@ -161,7 +161,7 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public List<Rating> getRatings() {
-        String sql = "SELECT rating_id, name FROM mpa_rating";
+        String sql = "SELECT rating_id, name FROM mpa_rating order by rating_id";
         return jdbcTemplate.query(sql, (rs, rowNum) -> makeRating(rs));
     }
 

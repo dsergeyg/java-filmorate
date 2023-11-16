@@ -1,16 +1,14 @@
-INSERT INTO genre (name) SELECT * FROM (
-SELECT 'Комедия' UNION
-SELECT 'Драма' UNION 
-SELECT 'Мультфильм' UNION
-SELECT 'Триллер' UNION 
-SELECT 'Документальный' UNION
-SELECT 'Боевик') WHERE NOT EXISTS (SELECT * FROM genre g WHERE g.name = name);
+INSERT INTO genre (name) VALUES ('Комедия');
+INSERT INTO genre (name) VALUES ('Драма');
+INSERT INTO genre (name) VALUES ('Мультфильм');
+INSERT INTO genre (name) VALUES ('Триллер');
+INSERT INTO genre (name) VALUES ('Документальный');
+INSERT INTO genre (name) VALUES ('Боевик');
 
 --------------------------------------------------
 
-INSERT INTO mpa_rating (name) SELECT * FROM (
-SELECT 'G' UNION
-SELECT 'PG' UNION 
-SELECT 'PG-13' UNION
-SELECT 'R' UNION 
-SELECT 'NC-17') WHERE NOT EXISTS (SELECT * FROM mpa_rating g WHERE g.name = name);
+INSERT INTO mpa_rating (name) VALUES ('G');
+INSERT INTO mpa_rating (name) VALUES ('PG');
+INSERT INTO mpa_rating (name) VALUES ('PG-13');
+INSERT INTO mpa_rating (name) VALUES ('R');
+INSERT INTO mpa_rating (name) VALUES ('NC-17');
