@@ -32,7 +32,7 @@ public interface FilmStorage {
 
     List<Genre> getGenres();
 
-    List<Long> getGenresByFilmID(long id);
+    List<Genre> getGenresByFilmID(long id);
 
     void addGenresByFilm(Film film);
 

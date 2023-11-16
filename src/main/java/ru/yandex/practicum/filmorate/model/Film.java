@@ -29,7 +29,7 @@ public class Film implements Update {
     private long duration;
     @NotNull(message = "Name may not be null")
     private Rating mpa;
-    private HashSet<Long> genreList;
+    private HashSet<Genre> genres = new HashSet<>();
     @JsonIgnore
     @EqualsAndHashCode.Exclude
     private HashSet<Long> likesList = new HashSet<>();

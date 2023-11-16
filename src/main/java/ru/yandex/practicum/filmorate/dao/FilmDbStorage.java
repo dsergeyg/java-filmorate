@@ -46,6 +46,8 @@ public class FilmDbStorage implements FilmStorage {
         }, keyHolder);
         film.setId(keyHolder.getKey().longValue());
         film.setMpa(getRatingById(film.getMpa().getId()));
+        if (!film.getGenres().isEmpty())
+            addGenresByFilm(film);
         log.info("Фильм добавлен: {}", film.getName());
     }
 
@@ -59,11 +61,12 @@ public class FilmDbStorage implements FilmStorage {
                 film.getDescription(),
                 film.getReleaseDate(),
                 film.getDuration(),
-                film.getId(),
+                film.getMpa().getId(),
                 film.getId());
-        if (!film.getGenreList().isEmpty()) {
+        if (!film.getGenres().isEmpty()) {
             addGenresByFilm(film);
         }
+        film.setMpa(getRatingById(film.getMpa().getId()));
         log.info("Фильм обновлен: {} {}", film.getId(), film.getName());
     }
 
@@ -103,7 +106,7 @@ public class FilmDbStorage implements FilmStorage {
             return film;
         } else {
             log.info("Фильм с идентификатором {} не найден.", id);
-            return null;
+            throw new NotFoundException("Фильм id = " + id + " не найден!");
         }
     }
 
@@ -152,7 +155,7 @@ public class FilmDbStorage implements FilmStorage {
             return rating;
         } else {
             log.info("рейтинг с идентификатором {} не найден.", id);
-            return null;
+            throw new NotFoundException("Рейтинг id = " + id + " не найден!");
         }
     }
 
@@ -180,7 +183,7 @@ public class FilmDbStorage implements FilmStorage {
             return genre;
         } else {
             log.info("Жанр фильма с идентификатором {} не найден.", id);
-            return null;
+            throw new NotFoundException("Жанр id = " + id + " не найден!");
         }
     }
 
@@ -191,9 +194,9 @@ public class FilmDbStorage implements FilmStorage {
     }
 
     @Override
-    public List<Long> getGenresByFilmID(long id) {
+    public List<Genre> getGenresByFilmID(long id) {
         String sql = "SELECT genre_id FROM film_genre WHERE film_id = ?";
-        return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("genre_id"), id);
+        return jdbcTemplate.query(sql, (rs, rowNum) -> makeGenre(rs), id);
     }
 
     @Override
@@ -203,10 +206,10 @@ public class FilmDbStorage implements FilmStorage {
 
         String sqlInsert = "INSERT INTO film_genre (film_id, genre_id) VALUES (?, ?);";
 
-        for (Long id : film.getGenreList()) {
+        for (Genre genre : film.getGenres()) {
             jdbcTemplate.update(sqlInsert,
                     film.getId(),
-                    id);
+                    genre.getId());
         }
         log.info("Жанры для фильма добавлены: {}", film.getId());
     }
