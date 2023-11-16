@@ -2,12 +2,14 @@ package ru.yandex.practicum.filmorate.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.dao.FilmDbStorage;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Genre;
+import ru.yandex.practicum.filmorate.model.Rating;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
-import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
-import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import javax.validation.ValidationException;
@@ -19,11 +21,14 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 public class FilmService {
+
     private final FilmStorage filmStorage;
+
     private final UserStorage userStorage;
 
     @Autowired
-    public FilmService(InMemoryFilmStorage filmStorage, InMemoryUserStorage userStorage) {
+    public FilmService(@Qualifier("filmDbStorage") FilmStorage filmStorage,
+                       @Qualifier("userDbStorage") UserStorage userStorage) {
         this.filmStorage = filmStorage;
         this.userStorage = userStorage;
     }
@@ -71,6 +76,22 @@ public class FilmService {
                 .sorted((Comparator.comparingInt(o -> -o.getLikesList().size())))
                 .limit(count)
                 .collect(Collectors.toList());
+    }
+
+    public List<Genre> getGenres() {
+        return filmStorage.getGenres();
+    }
+
+    public Genre getGenre(long id) {
+        return filmStorage.getGenreById(id);
+    }
+
+    public List<Rating> getRatings() {
+        return filmStorage.getRatings();
+    }
+
+    public Rating getRating(long id) {
+        return filmStorage.getRatingById(id);
     }
 
     private void filmValidation(Film film) throws ValidationException {

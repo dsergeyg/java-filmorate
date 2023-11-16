@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Component
+@Component("inMemoryUserStorage")
 public class InMemoryUserStorage implements UserStorage {
     private final Map<Long, User> users = new HashMap<>();
     private long idSequence;
@@ -18,6 +18,11 @@ public class InMemoryUserStorage implements UserStorage {
     public void addUserToStorage(User user) {
         user.setId(++idSequence);
         users.put(user.getId(), user);
+    }
+
+    @Override
+    public User acceptFriend(long id, long friendId) {
+        return null;
     }
 
     @Override

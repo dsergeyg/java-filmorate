@@ -15,6 +15,7 @@ import java.util.HashSet;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode
 public class User implements Update {
     @NotNull(groups = Update.class)
     private Long id;
@@ -27,5 +28,8 @@ public class User implements Update {
     @Past(message = "Birthday mast be in the past")
     private LocalDate birthday;
     @JsonIgnore
+    @EqualsAndHashCode.Exclude
     private HashSet<Long> friendsList = new HashSet<>();
+
+
 }

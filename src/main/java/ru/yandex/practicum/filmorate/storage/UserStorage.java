@@ -20,5 +20,7 @@ public interface UserStorage {
 
     List<Long> getFriends(long id);
 
+    User acceptFriend(long id, long friendId);
+
     void userCheck(long id);
 }
