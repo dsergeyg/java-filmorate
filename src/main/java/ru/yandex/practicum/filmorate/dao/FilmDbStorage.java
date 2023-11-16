@@ -83,8 +83,8 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public Film getFilmById(long id) {
-        SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet("SELECT f.film_id, f.name, f.description, f.release_date, f.duration, f. rating_id, m.name AS mpa_name " +
-                "FROM film_data f LEFT JOIN mpa_rating m ON f.rating_id = m.rating_id" +
+        SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet("SELECT f.film_id, f.name, f.description, f.release_date, f.duration, f.rating_id, m.name AS mpa_name" +
+                " FROM film_data AS f LEFT JOIN mpa_rating AS m ON f.rating_id = m.rating_id" +
                 " WHERE film_id = ? LIMIT 1", id);
 
         if (sqlRowSet.next()) {
@@ -94,7 +94,7 @@ public class FilmDbStorage implements FilmStorage {
                     sqlRowSet.getString("description"),
                     sqlRowSet.getDate("release_date").toLocalDate(),
                     sqlRowSet.getLong("duration"),
-                    new Rating(sqlRowSet.getLong("rating_id"), sqlRowSet.getString("mpa_name")),
+                    new Rating(sqlRowSet.getLong("rating_id"),sqlRowSet.getString(7)),
                     new HashSet<>(),
                     new HashSet<>(getLikes(id)));
             log.info("Найден фильм: {} {}", film.getId(), film.getName());
