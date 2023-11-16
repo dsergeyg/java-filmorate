@@ -1,6 +1,8 @@
 package ru.yandex.practicum.filmorate.storage;
 
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Genre;
+import ru.yandex.practicum.filmorate.model.Rating;
 
 import java.util.List;
 
@@ -21,4 +23,17 @@ public interface FilmStorage {
     List<Long> getLikes(long id);
 
     void filmCheck(long id);
+
+    Rating getRatingById(long id);
+
+    List<Rating> getRatings();
+
+    Genre getGenreById(long id);
+
+    List<Genre> getGenres();
+
+    List<Genre> getGenresByFilmID(long id);
+
+    void addGenresByFilm(Film film);
+
 }

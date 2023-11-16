@@ -3,13 +3,15 @@ package ru.yandex.practicum.filmorate.storage;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Genre;
+import ru.yandex.practicum.filmorate.model.Rating;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Component
+@Component("inMemoryFilmStorage")
 public class InMemoryFilmStorage implements FilmStorage {
     private final Map<Long, Film> films = new HashMap<>();
     private long idSequence;
@@ -18,6 +20,36 @@ public class InMemoryFilmStorage implements FilmStorage {
     public void addFilmToStorage(Film film) {
         film.setId(++idSequence);
         films.put(film.getId(), film);
+    }
+
+    @Override
+    public Rating getRatingById(long id) {
+        return null;
+    }
+
+    @Override
+    public List<Rating> getRatings() {
+        return null;
+    }
+
+    @Override
+    public Genre getGenreById(long id) {
+        return null;
+    }
+
+    @Override
+    public List<Genre> getGenres() {
+        return null;
+    }
+
+    @Override
+    public List<Genre> getGenresByFilmID(long id) {
+        return null;
+    }
+
+    @Override
+    public void addGenresByFilm(Film film) {
+
     }
 
     @Override

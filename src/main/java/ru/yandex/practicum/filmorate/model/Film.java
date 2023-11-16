@@ -15,6 +15,7 @@ import java.util.HashSet;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode
 public class Film implements Update {
     @NotNull(groups = Update.class)
     private long id;
@@ -26,6 +27,10 @@ public class Film implements Update {
     private LocalDate releaseDate;
     @Positive(message = "Duration may not be negative")
     private long duration;
+    @NotNull(message = "Name may not be null")
+    private Rating mpa;
+    private HashSet<Genre> genres = new HashSet<>();
     @JsonIgnore
+    @EqualsAndHashCode.Exclude
     private HashSet<Long> likesList = new HashSet<>();
 }

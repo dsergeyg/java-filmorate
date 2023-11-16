@@ -45,6 +45,11 @@ public class UserController {
         return userService.addFriends(id, friendId);
     }
 
+    @PutMapping("/users/{id}/friends/accept/{friendId}")
+    public User acceptFriend(@PathVariable long id, @PathVariable long friendId) {
+        return userService.acceptFriend(id, friendId);
+    }
+
     @DeleteMapping("/users/{id}/friends/{friendId}")
     public User deleteFriend(@PathVariable long id, @PathVariable long friendId) {
         return userService.deleteFriends(id, friendId);
