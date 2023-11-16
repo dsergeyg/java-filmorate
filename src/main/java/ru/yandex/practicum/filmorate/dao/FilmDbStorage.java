@@ -70,10 +70,10 @@ public class FilmDbStorage implements FilmStorage {
         long id = rs.getInt("film_id");
         String name = rs.getString("name");
         String description = rs.getString("description");
-        LocalDate release_date = rs.getDate("release_date").toLocalDate();
+        LocalDate releaseDate = rs.getDate("release_date").toLocalDate();
         long duration = rs.getLong("duration");
         long ratingId = rs.getLong("rating_id");
-        Film film = new Film(id, name, description, release_date, duration, ratingId, new HashSet<>(getGenresByFilmID(id)), new HashSet<>(getLikes(id)));
+        Film film = new Film(id, name, description, releaseDate, duration, ratingId, new HashSet<>(getGenresByFilmID(id)), new HashSet<>(getLikes(id)));
         return film;
     }
 
