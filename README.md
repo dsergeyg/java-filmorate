@@ -1,7 +1,7 @@
 # java-filmorate project
 
 ## ER - диаграмма
-![ER-диаграмма](ER-diagram.png)
+![ER-диаграмма](Untitled Diagram-Page-4.drawio.png)
 
 ## Запросы к БД 
 ### Получение спсика всех фильмов пользователя
