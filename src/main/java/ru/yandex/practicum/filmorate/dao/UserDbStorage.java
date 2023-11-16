@@ -42,13 +42,6 @@ public class UserDbStorage implements UserStorage {
             return stmt;
         }, keyHolder);
         user.setId(keyHolder.getKey().longValue());
-
-       /* jdbcTemplate.update(sqlInsert,
-                user.getEmail(),
-                user.getLogin(),
-                user.getName(),
-                user.getBirthday());
-        log.info("Пользователь добавлен: {} {}", user.getLogin(), user.getEmail());*/
     }
 
     @Override

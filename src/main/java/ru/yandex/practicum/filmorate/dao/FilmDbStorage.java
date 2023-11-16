@@ -15,7 +15,6 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 
 @Component("filmDbStorage")
 @Slf4j
@@ -87,7 +86,7 @@ public class FilmDbStorage implements FilmStorage {
                     sqlRowSet.getLong("film_id"),
                     sqlRowSet.getString("name"),
                     sqlRowSet.getString("description"),
-                    Objects.requireNonNull(sqlRowSet.getDate("release_date")).toLocalDate(),
+                    sqlRowSet.getDate("release_date").toLocalDate(),
                     sqlRowSet.getLong("duration"),
                     sqlRowSet.getLong("rating_id"),
                     new HashSet<>(),
