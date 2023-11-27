@@ -29,8 +29,8 @@ public class GenreDbStorageTest {
     @DirtiesContext
     public void getGenreByIdTest() {
         GenreDbStorage genreStorage = new GenreDbStorage(jdbcTemplate);
-        assertEquals(genreStorage.getGenreById(1).getName(), "Боевик");
-        assertEquals(genreStorage.getGenreById(3).getName(), "Драма");
+        assertEquals(genreStorage.getGenreById(1).getName(), "Комедия");
+        assertEquals(genreStorage.getGenreById(3).getName(), "Мультфильм");
     }
 
     @Test
@@ -38,12 +38,12 @@ public class GenreDbStorageTest {
     public void getGenres() {
         GenreDbStorage genreStorage = new GenreDbStorage(jdbcTemplate);
         List<Genre> genreList = new ArrayList<>();
-        genreList.add(new Genre(1, "Боевик"));
-        genreList.add(new Genre(2, "Документальный"));
-        genreList.add(new Genre(3, "Драма"));
-        genreList.add(new Genre(4, "Комедия"));
-        genreList.add(new Genre(5, "Мультфильм"));
-        genreList.add(new Genre(6, "Триллер"));
+        genreList.add(new Genre(1, "Комедия"));
+        genreList.add(new Genre(2, "Драма"));
+        genreList.add(new Genre(3, "Мультфильм"));
+        genreList.add(new Genre(4, "Триллер"));
+        genreList.add(new Genre(5, "Документальный"));
+        genreList.add(new Genre(6, "Боевик"));
         assertEquals(genreList, genreStorage.getGenres());
     }
 
@@ -60,7 +60,7 @@ public class GenreDbStorageTest {
         genres.add(genreStorage.getGenreById(3));
         newFilm.setGenres(genres);
         genreStorage.addGenresByFilm(newFilm);
-        assertEquals(new ArrayList<>(genres).stream().sorted(Comparator.comparingLong(o -> o.getId())).collect(Collectors.toList()), genreStorage.getGenresByFilmID(newFilm.getId()));
+        assertEquals(new ArrayList<>(genres).stream().sorted(Comparator.comparingLong(Genre::getId)).collect(Collectors.toList()), genreStorage.getGenresByFilmID(newFilm.getId()));
     }
 
     @Test
@@ -76,7 +76,7 @@ public class GenreDbStorageTest {
         genres.add(genreStorage.getGenreById(1));
         newFilm.setGenres(genres);
         genreStorage.addGenresByFilm(newFilm);
-        assertEquals(new ArrayList<>(genres).stream().sorted(Comparator.comparingLong(o -> o.getId())).collect(Collectors.toList()), genreStorage.getGenresByFilmID(newFilm.getId()));
+        assertEquals(new ArrayList<>(genres).stream().sorted(Comparator.comparingLong(Genre::getId)).collect(Collectors.toList()), genreStorage.getGenresByFilmID(newFilm.getId()));
         genreStorage.deleteGenresByFilm(newFilm);
         assertTrue(genreStorage.getGenresByFilmID(newFilm.getId()).isEmpty());
     }
