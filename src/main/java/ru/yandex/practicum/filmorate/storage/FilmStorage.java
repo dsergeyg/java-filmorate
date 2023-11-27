@@ -20,5 +20,4 @@ public interface FilmStorage {
 
     List<Long> getLikes(long id);
 
-    void filmCheck(long id);
 }

@@ -11,6 +11,7 @@ import javax.validation.*;
 import java.util.*;
 
 @RestController
+@RequestMapping("/films")
 public class FilmController {
 
     private final FilmService filmService;
@@ -20,37 +21,37 @@ public class FilmController {
         this.filmService = filmService;
     }
 
-    @PostMapping("/films")
+    @PostMapping
     public Film postFilm(@Valid @RequestBody Film film) {
         return filmService.addFilm(film);
     }
 
-    @PutMapping("/films")
+    @PutMapping
     public Film putFilm(@Validated(Update.class) @RequestBody Film film) {
         return filmService.updateFilm(film);
     }
 
-    @GetMapping("/films")
+    @GetMapping
     public List<Film> getFilms() {
         return filmService.getFilms();
     }
 
-    @GetMapping("/films/{id}")
+    @GetMapping("/{id}")
     public Film getFilm(@PathVariable long id) {
         return filmService.getFilm(id);
     }
 
-    @PutMapping("/films/{id}/like/{userId}")
+    @PutMapping("/{id}/like/{userId}")
     public Film putLikeToFilm(@PathVariable long id, @PathVariable long userId) {
         return filmService.addLike(id, userId);
     }
 
-    @DeleteMapping("/films/{id}/like/{userId}")
+    @DeleteMapping("/{id}/like/{userId}")
     public Film deleteLikeFromFilm(@PathVariable long id, @PathVariable long userId) {
         return filmService.deleteLike(id, userId);
     }
 
-    @GetMapping("/films/popular")
+    @GetMapping("/popular")
     public List<Film> getPopularFilm(@RequestParam(name = "count", required = false, defaultValue = "10") int count) {
         return filmService.getCountPopularFilms(count);
     }

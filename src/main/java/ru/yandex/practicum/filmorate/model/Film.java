@@ -15,9 +15,11 @@ import java.util.HashSet;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode
 public class Film implements Update {
     @NotNull(groups = Update.class)
     private long id;
+    @Size(max = 100, message = "Name max string value 200 chars")
     @NotBlank(message = "Name may not be null")
     private String name;
     @Size(max = 200, message = "Description max string value 200 chars")
@@ -26,6 +28,10 @@ public class Film implements Update {
     private LocalDate releaseDate;
     @Positive(message = "Duration may not be negative")
     private long duration;
+    @NotNull(message = "Name may not be null")
+    private Rating mpa;
+    private HashSet<Genre> genres = new HashSet<>();
     @JsonIgnore
+    @EqualsAndHashCode.Exclude
     private HashSet<Long> likesList = new HashSet<>();
 }

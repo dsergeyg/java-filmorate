@@ -2,10 +2,10 @@ package ru.yandex.practicum.filmorate.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import javax.validation.ValidationException;
@@ -20,7 +20,7 @@ public class UserService {
     private final UserStorage userStorage;
 
     @Autowired
-    public UserService(InMemoryUserStorage userStorage) {
+    public UserService(@Qualifier("userDbStorage") UserStorage userStorage) {
         this.userStorage = userStorage;
     }
 
@@ -31,7 +31,7 @@ public class UserService {
         return user;
     }
 
-    public User updateUser(User user) throws ValidationException, NotFoundException {
+    public User updateUser(User user) throws ValidationException {
         log.info(UtilService.getDateWithTimeStr(LocalDateTime.now()) + " Получен запрос на обновление User " + user);
         if (userStorage.getUserById(user.getId()) == null)
             throw new NotFoundException("Object not found " + user);
@@ -45,24 +45,24 @@ public class UserService {
         return userStorage.getUsers();
     }
 
-    public User getUser(long id) throws NotFoundException {
+    public User getUser(long id) {
         log.info(UtilService.getDateWithTimeStr(LocalDateTime.now()) + " Получен запрос на получение пользователя");
         return userStorage.getUserById(id);
     }
 
-    public User addFriends(long id, long friendId) throws NotFoundException {
+    public User addFriends(long id, long friendId) {
         log.info(UtilService.getDateWithTimeStr(LocalDateTime.now()) + " Получен запрос на добавление пользователя " + friendId + " в друзья пользователю " + id);
         return userStorage.addFriend(id, friendId);
     }
 
-    public User deleteFriends(long id, long friendId) throws NotFoundException {
+    public User deleteFriends(long id, long friendId) {
         log.info(UtilService.getDateWithTimeStr(LocalDateTime.now()) + " Получен запрос на удаление пользователя " + friendId + " из друзей пользователя " + id);
         return userStorage.deleteFriend(id, friendId);
     }
 
-    public List<User> getFriendList(long id) throws NotFoundException {
+    public List<User> getFriendList(long id) {
         log.info(UtilService.getDateWithTimeStr(LocalDateTime.now()) + " Получен запрос на получение списка друзей пользователя с id = " + id);
-        userStorage.userCheck(id);
+        userStorage.getUserById(id);
         List<Long> friends = userStorage.getFriends(id);
         return friends
                 .stream()
@@ -70,10 +70,10 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-    public List<User> getCommonFriendList(long id, long otherId) throws NotFoundException {
+    public List<User> getCommonFriendList(long id, long otherId) {
         log.info(UtilService.getDateWithTimeStr(LocalDateTime.now()) + " Получен запрос на получение списка общих друзей пользователя с id = " + id + " и пользователя с id = " + otherId);
-        userStorage.userCheck(id);
-        userStorage.userCheck(otherId);
+        userStorage.getUserById(id);
+        userStorage.getUserById(otherId);
         List<Long> friends = userStorage.getFriends(id);
         List<Long> otherFriends = userStorage.getFriends(otherId);
         return friends
