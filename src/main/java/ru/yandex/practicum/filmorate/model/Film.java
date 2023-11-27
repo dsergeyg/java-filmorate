@@ -19,6 +19,7 @@ import java.util.HashSet;
 public class Film implements Update {
     @NotNull(groups = Update.class)
     private long id;
+    @Size(max = 100, message = "Name max string value 200 chars")
     @NotBlank(message = "Name may not be null")
     private String name;
     @Size(max = 200, message = "Description max string value 200 chars")
