@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS film_data (
 CREATE TABLE IF NOT EXISTS like_list (
 	film_id integer NOT NULL REFERENCES film_data (film_id) ON DELETE CASCADE,
 	user_id integer NOT NULL REFERENCES user_data (user_id) ON DELETE CASCADE,
-	PRIMARY KEY (film_data, user_id)
+	PRIMARY KEY (film_id, user_id)
 );
 
 --"partial index" are not implemented in H2

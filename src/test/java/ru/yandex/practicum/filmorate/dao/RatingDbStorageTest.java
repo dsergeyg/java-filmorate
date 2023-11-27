@@ -23,7 +23,7 @@ public class RatingDbStorageTest {
     public void getRatingByIdTest() {
         RatingDbStorage ratingStorage = new RatingDbStorage(jdbcTemplate);
         assertEquals(ratingStorage.getRatingById(1).getName(), "G");
-        assertEquals(ratingStorage.getRatingById(3).getName(), "PG-13");
+        assertEquals(ratingStorage.getRatingById(3).getName(), "PG");
     }
 
     @Test
@@ -32,10 +32,10 @@ public class RatingDbStorageTest {
         RatingDbStorage ratingStorage = new RatingDbStorage(jdbcTemplate);
         List<Rating> ratingList = new ArrayList<>();
         ratingList.add(new Rating(1, "G"));
-        ratingList.add(new Rating(2, "PG"));
-        ratingList.add(new Rating(3, "PG-13"));
-        ratingList.add(new Rating(4, "R"));
-        ratingList.add(new Rating(5, "NC-17"));
+        ratingList.add(new Rating(2, "NC-17"));
+        ratingList.add(new Rating(3, "PG"));
+        ratingList.add(new Rating(4, "PG-13"));
+        ratingList.add(new Rating(5, "R"));
         assertEquals(ratingList, ratingStorage.getRatings());
     }
 }
